@@ -21,8 +21,19 @@ public class Config
     public string imagePath;
     public string cubemapImagePath;
     public string[] spawnPoints;
-    /*
-    public bool customColors;
-    public bool disableInPublicLobbies;
-    */
+}
+
+[System.Serializable]
+public class SurfaceClimbSettingsJSON
+{
+    public bool SurfaceClimbSettings = true;
+    public bool Unclimbable = false;
+    public float slipPercentage = 0.03f;
+}
+
+[System.Serializable]
+public class ObjectTriggerJSON
+{
+    public string ObjectTriggerName;
+    public bool OnlyTriggerOnce = false;
 }

@@ -121,19 +121,41 @@ public static class ExporterUtils
         BuildPipeline.BuildAssetBundles(Application.temporaryCachePath, new AssetBundleBuild[] { assetBundleBuild }, 0, BuildTarget.StandaloneWindows64);
 
         // Do Android specific stuff here. Stripping MonoBehaviours and converting them to TextAssets, etc.
-        foreach (VmodMonkeMapLoader.Behaviours.TagZone zone in gameObject.GetComponentsInChildren<VmodMonkeMapLoader.Behaviours.TagZone>())
+        foreach (TagZone zone in gameObject.GetComponentsInChildren<TagZone>())
         {
             CreateQuestText("{\"TagZone\": true}", zone.gameObject);
             Object.DestroyImmediate(zone);
         }
 
-        foreach (VmodMonkeMapLoader.Behaviours.MakeObjectUnclimbable makeObjectUnclimbable in gameObject.GetComponentsInChildren<VmodMonkeMapLoader.Behaviours.MakeObjectUnclimbable>())
+        foreach(SurfaceClimbSettings surfaceClimbSettings in gameObject.GetComponentsInChildren<SurfaceClimbSettings>())
         {
-            CreateQuestText("{\"MakeObjectUnclimbable\": true}", makeObjectUnclimbable.gameObject);
-            Object.DestroyImmediate(makeObjectUnclimbable);
+            SurfaceClimbSettingsJSON settingsJson = new SurfaceClimbSettingsJSON();
+            settingsJson.Unclimbable = surfaceClimbSettings.Unclimbable;
+            settingsJson.slipPercentage = surfaceClimbSettings.slipPercentage;
+
+            CreateQuestText(JsonUtility.ToJson(settingsJson), surfaceClimbSettings.gameObject);
+            Object.DestroyImmediate(surfaceClimbSettings);
         }
+
+        int triggerCount = 1;
+        foreach (ObjectTrigger objectTrigger in gameObject.GetComponentsInChildren<ObjectTrigger>())
+        {
+            string objectName = "ObjectTrigger" + triggerCount;
+            if(objectTrigger.ObjectToTrigger != null)
+            {
+                CreateQuestText("{\"TriggeredBy\": \"" + objectName + "\"}", objectTrigger.ObjectToTrigger);
+            }
+            ObjectTriggerJSON triggerJSON = new ObjectTriggerJSON();
+            triggerJSON.ObjectTriggerName = objectName;
+            triggerJSON.OnlyTriggerOnce = objectTrigger.OnlyTriggerOnce;
+
+            CreateQuestText(JsonUtility.ToJson(triggerJSON), objectTrigger.gameObject);
+            Object.DestroyImmediate(objectTrigger);
+            triggerCount++;
+        }
+
         int teleporterCount = 1;
-        foreach (VmodMonkeMapLoader.Behaviours.Teleporter teleporter in gameObject.GetComponentsInChildren<VmodMonkeMapLoader.Behaviours.Teleporter>())
+        foreach (Teleporter teleporter in gameObject.GetComponentsInChildren<Teleporter>())
         {
             string teleporterName = "Teleporter" + teleporterCount;
             foreach(Transform teleportPoint in teleporter.TeleportPoints)
@@ -189,7 +211,7 @@ public static class ExporterUtils
 
         // Move the ZIP and finalize
         File.Move(Application.temporaryCachePath + "/tempZip.zip", path);
-        Object.DestroyImmediate(gameObject);
+        //Object.DestroyImmediate(gameObject);
         AssetDatabase.Refresh();
     }
 

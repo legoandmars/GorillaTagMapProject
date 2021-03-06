@@ -61,7 +61,7 @@ public class CompileMapWindow : EditorWindow
                     GameObject noteObject = note.gameObject;
                     if (noteObject != null && note != null)
                     {
-                        string path = EditorUtility.SaveFilePanel("Save map file", "", note.MapName + ".gmap", "gmap");
+                        string path = EditorUtility.SaveFilePanel("Save map file", "", note.MapName + ".gtmap", "gtmap");
                         Debug.Log(path == "");
 
                         if (path != "")
