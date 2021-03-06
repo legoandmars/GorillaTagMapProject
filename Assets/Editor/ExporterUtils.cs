@@ -10,6 +10,8 @@ using VmodMonkeMapLoader.Behaviours;
 
 public static class ExporterUtils
 {
+    static bool DebugPrefabs = false;
+
     public static PackageJSON MapDescriptorToJSON(MapDescriptor mapDescriptor)
     {
         PackageJSON packageJSON = new PackageJSON();
@@ -61,6 +63,37 @@ public static class ExporterUtils
             fakeSkybox.transform.localPosition = Vector3.zero;
         }
 
+        // Remove meshes from prefabs/triggers
+        if (!DebugPrefabs)
+        {
+            StripMeshes<ObjectTrigger>(gameObject);
+            StripMeshes<Teleporter>(gameObject);
+            StripMeshes<TagZone>(gameObject);
+            foreach(Renderer renderer in gameObject.GetComponentsInChildren<Renderer>()) if (renderer.sharedMaterial.name.StartsWith("Teleport Point")) Object.DestroyImmediate(renderer);
+            StripMeshes<ObjectTrigger>(gameObject);
+        }
+
+        foreach (Renderer renderer in gameObject.GetComponentsInChildren<Renderer>())
+        {
+            if(renderer.sharedMaterial.name.StartsWith("Spawn Point"))
+            {
+                bool foundTransform = false;
+                foreach(Transform spawnPoint in mapDescriptor.SpawnPoints)
+                {
+                    if (spawnPoint == renderer.gameObject.transform) foundTransform = true;
+                }
+                if (!foundTransform)
+                {
+                    List <Transform> spawnPointArray = new List<Transform>(mapDescriptor.SpawnPoints);
+                    spawnPointArray.Add(renderer.gameObject.transform);
+                    mapDescriptor.SpawnPoints = spawnPointArray.ToArray();
+                }
+                if(!DebugPrefabs) Object.DestroyImmediate(renderer);
+            }
+        }
+
+        if (mapDescriptor.SpawnPoints.Length == 0) throw new System.Exception("No spawn points found! Add some spawn points to your map.");
+
         // Take Screenshots with the thumbnail camera
         Camera thumbnailCamera = gameObject.transform.Find("ThumbnailCamera")?.GetComponent<Camera>();
         if(thumbnailCamera != null)
@@ -77,6 +110,7 @@ public static class ExporterUtils
             File.WriteAllBytes(Application.temporaryCachePath + "/preview_cubemap.png", screenshotCubemapPNG);
             packageJSON.config.cubemapImagePath = "preview_cubemap.png";
 
+            packageJSON.config.mapColor = AverageColor(screenshotCubemap);
             /* quest stuff (disabled for now)
             byte[] screenshotRaw = screenshot.GetRawTextureData();
             File.WriteAllBytes(Application.temporaryCachePath + "/preview_quest", screenshotRaw);
@@ -148,6 +182,7 @@ public static class ExporterUtils
             ObjectTriggerJSON triggerJSON = new ObjectTriggerJSON();
             triggerJSON.ObjectTriggerName = objectName;
             triggerJSON.OnlyTriggerOnce = objectTrigger.OnlyTriggerOnce;
+            triggerJSON.DisableObject = objectTrigger.DisableObject;
 
             CreateQuestText(JsonUtility.ToJson(triggerJSON), objectTrigger.gameObject);
             Object.DestroyImmediate(objectTrigger);
@@ -215,6 +250,16 @@ public static class ExporterUtils
         AssetDatabase.Refresh();
     }
 
+    public static void StripMeshes<T>(GameObject container)
+    {
+        foreach(T instance in container.GetComponentsInChildren<T>())
+        {
+            Component component = instance as Component;
+            if (component.gameObject.GetComponent<Renderer>() != null) Object.DestroyImmediate(component.gameObject.GetComponent<Renderer>());
+            if (component.gameObject.GetComponent<MeshFilter>() != null) Object.DestroyImmediate(component.gameObject.GetComponent<MeshFilter>());
+        }
+    }
+
     public static void CreateQuestText(string textToAdd, GameObject gameObject)
     {
         Text newText = gameObject.GetComponent<Text>();
@@ -277,5 +322,15 @@ public static class ExporterUtils
         Object.DestroyImmediate(cam.gameObject);
         RenderTexture.ReleaseTemporary(renderTex);
         return tex;
+    }
+
+    public static Color AverageColor(Texture2D tex)
+    {
+        Color[] colors = tex.GetPixels();
+        Color averaged = new Color(0, 0, 0);
+        foreach (Color color in colors) averaged += color;
+        averaged /= colors.Length;
+        averaged.a = 1;
+        return averaged;
     }
 }

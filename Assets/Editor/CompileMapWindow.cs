@@ -72,8 +72,16 @@ public class CompileMapWindow : EditorWindow
                             {
                                 noteObject = Instantiate(noteObject);
                                 // do stuff 
-                                ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(note));
-                                EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
+                                try
+                                {
+                                    ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(note));
+                                    EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
+                                }
+                                catch(System.Exception e)
+                                {
+                                    EditorUtility.DisplayDialog("Error!", e.Message, "OK");
+                                    DestroyImmediate(noteObject);
+                                }
                             }
                             else
                             {
