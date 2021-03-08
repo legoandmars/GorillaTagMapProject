@@ -2,14 +2,14 @@
 
 A unity project to create your own maps for the [MonkeMapLoader](https://github.com/Vadix88/VmodMonkeMapLoader/) mod for Gorilla Tag.
 
-This guide is pretty long and in-depth, so make sure to read it throughly. If you have any questions please don't hesitate to join the [Gorilla Tag Modding Discord](https://discord.gg/b2MhDBAzTv) to ask.
+This guide is pretty long and in-depth, so make sure to read it thoroughly. If you have any questions please don't hesitate to join the [Gorilla Tag Modding Discord](https://discord.gg/b2MhDBAzTv) to ask.
 
 **Contents**
 
   * [Setup](#setup)
   * [Creating a map](#creating-a-map)
   * [Spawn Points](#spawn-points)
-  * [Matching Gorilla Tag's Style](#matching-gorilla-tag-s-style)
+  * [Matching Gorilla Tag's Style](#matching-gorilla-tags-style)
   * [Triggers](#triggers)
     + [TagZone](#tagzone)
     + [TeleporterZone](#teleporterzone)
@@ -31,11 +31,11 @@ You can download the latest version of this project on the [Releases tab](https:
 ## Creating a map
 For the most part, creating a map itself is the same as creating anything in Unity. However, there are a few specific things that you'll need to do to ensure that the Map Loader can properly load it.
 
-To load up the Unity project, go ahead and open up Unity or Unity Hub (Hub is recommended) and then click Open/Add and navigate to the downloaded + unzipped project. Navigate to the folder that contains an `Assets`, `Packages`, `ProjectSettings` folders, then click `Select Folder`.
+To load up the Unity project, go ahead and open up Unity or Unity Hub (Hub is recommended) and then click Open/Add and navigate to the downloaded + unzipped project. Navigate to the folder that contains the `Assets`, `Packages`, `ProjectSettings` folders, then click `Select Folder`.
 
 If you don't see anything in your Unity Project, open the `Example Scene` found in the assets folder. You'll see an example map or two.
 
-Feel free to take a look at how these example maps work, but for now we're going to disable them by clicking each of them in the hierarchy then pressing the checkbox next to the GameObject's name on the right.
+Feel free to take a look at how these example maps work, but for now, we're going to disable them by clicking each of them in the hierarchy then pressing the checkbox next to the GameObject's name on the right.
 
 
 Create an empty GameObject that will hold everything in your map. Make sure the position is 0, and the scale is 1.
@@ -69,23 +69,23 @@ If you want people to be able to teleport to your map you'll need to add some Sp
 
 Under MapPrefabs, there's a `SpawnPoint` prefab. Drag one into your scene and make sure it's in your Map's GameObject.
 
-You can position the Spawn Point anywhere you want. It's recommended that you put it a little bit above the ground/away from walls to prevent people spawning inside of things.
+You can position the Spawn Point anywhere you want. It's recommended that you put it a little bit above the ground/away from walls to prevent people from spawning inside of things.
 
 _**Some important things to keep in mind:**_
 
 The player is about as tall as the Spawn Point cube.
 
-The max amount of players is 10, so it's a good idea to put multiple spawn points. You should have at least 4 in different locations - more if you set your map to respawn players on map end.
+The max amount of players is 10, so it's a good idea to put multiple spawn points. You should have at least 4 in different locations - more if you set your map to respawn players at the ends of rounds.
 
 ## Matching Gorilla Tag's Style
 Although not every custom map has to look exactly like the game, making your map look similar to the base game's visuals will help improve player experience, so here's a couple of tips:
 
-To make your textures have the same low-poly PS2 style as gorilla tag, change the following settings:
+To make your textures have the same low-poly PS2 style as Gorilla Tag, change the following settings:
 - Filter Mode - Point (no filter) [This will ensure your textures aren't blurry]
 - Max Size - 64/128/256 [This will depend on your texture's size and what you're using it on. Just do what looks like the base game]
 - Compression - None [This will make sure that your images don't get garbled by compression]
 
-![An image showing the best settings for gorilla tag textures](https://user-images.githubusercontent.com/34404266/110262890-e8440e80-7f69-11eb-870c-4445084b680e.png)
+![An image showing the best settings for Gorilla Tag textures](https://user-images.githubusercontent.com/34404266/110262890-e8440e80-7f69-11eb-870c-4445084b680e.png)
 
 Additionally, if you want to make a model low poly you can add a Decimate modifier to it in Blender. Lower the threshold until the model looks low poly enough for you.
 
@@ -96,7 +96,7 @@ Getting the art style exactly right can be hard, so make sure to join the [Goril
 ## Triggers
 This project contains several triggers meant to add functionality and make map-making easier. These triggers have a physical appearance to make things easier for map makers. This physical appearance is removed on build, though, so don't worry about it ending up in the final map - it's all taken care of for you.
 
-There's 2 propeties found on all Triggers:
+There are 2 properties found on all Triggers:
 - Touch Type 
     - What the player has to touch the trigger with to make it trigger
     - Valid values: Heads/Arms/Any
@@ -197,11 +197,11 @@ Once your map is all done, it's time to export! First, let's run through our che
 - If you're using Teleporters, double check that the Teleporter Points are set properly.
 - Double check all of your Triggers to ensure that options are set properly.
 
-If you wanted to use a custom skybox, import it into your Unity project as an image, set the `Texture Shape` to Cube and set your map's `Custom Skybox` to it.
+If you wanted to use a custom skybox, import it into your Unity project as an image, set the `Texture Shape` to Cube, and set your map's `Custom Skybox` to it.
 
 There's one more final step you'll need to do before exporting, and that's creating a `ThumbnailCamera`. Right click on your map's GameObject, then click `Camera` to add a camera. Rename this camera `ThumbnailCamera`.
 
-Get your Scene view into a good position for a thumbnail (something that shows off your map and its main features), then click on the `ThumbnailCamera` and at the top of your screen click `GameObject -> Align With View` (You can position the camera manually too, but this way is easier)
+Get your Scene view into a good position for a thumbnail (something that shows off your map and its main features), then click on the `ThumbnailCamera` and at the top of your screen click `GameObject/Align With View` (You can position the camera manually too, but this way is easier)
 
 Now that your thumbnail is created, it's time to export! Go to `Window/Map Exporter` and click Export [your map name]. Alternatively, you can click on your map's GameObject and click `Export Map`.
 
