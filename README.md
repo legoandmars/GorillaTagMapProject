@@ -56,7 +56,7 @@ Here's what each setting does:
 - Spawn Points
     - A list of spawn points for the map. 
     - You shouldn't set this manually unless you know what you're doing
-    - More Info in the [Spawn Points section](#-Spawn-Points)
+    - More Info in the [Spawn Points section](#spawn-points)
 - Custom Skybox
     - A cubemap that will be used as the skybox on your map
     - If this empty, it'll automatically give your map the default game's skybox
@@ -190,7 +190,7 @@ Once your map is all done, it's time to export! First, let's run through our che
     - Name, Author, Description, etc should all be filled out
 - Did you add at least one Spawn Point to your map?
     - More is better - at least 4 in different spots are recommended
-    - Brush back over the tips in the [Spawn Points section](#-Spawn-Points)
+    - Brush back over the tips in the [Spawn Points section](#spawn-points)
 - Did you add at least one `TeleporterTreehouse` to your map?
     - Not technically required, but without one players won't be able to get back to the treehouse 
     - Make sure your `TeleporterTreehouse`s are in an a semi-obvious spot so players can easily leave if they need to.
