@@ -177,7 +177,7 @@ A surface that players can't climb. Useful for parkour courses and boundaries.
 
 To add an `UnclimbableSurface` to your scene, simply drag and drop it into the Hierarchy from your `MapPrefabs` folder. You can have as many as you want and position/rescale them however you'd like.
 
-Note that if you don't want to use the default material that's included with an `UnclimbableSurface`, you can swap it out. The `UnclimbableSurface` also works on any object with a collider, so feel free to add it to existing objects to change their surface settings.
+Note that if you don't want to use the default material that's included with an `UnclimbableSurface`, you can swap it out. You can make any surface unclimbable by adding a `SurfaceClimbSettings` script to it and checking Unclimbable, so feel free to add it to existing objects to change their surface settings.
 
 ## Exporting
 
