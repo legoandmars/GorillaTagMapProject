@@ -70,7 +70,7 @@ public class CompileMapWindow : EditorWindow
 
                             if(noteObject.transform.Find("ThumbnailCamera") != null)
                             {
-                                noteObject = Instantiate(noteObject);
+                                // noteObject = Instantiate(noteObject);
                                 // do stuff 
                                 try
                                 {

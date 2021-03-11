@@ -27,18 +27,18 @@ public class MapDescriptorEditor : Editor
 
                 if (noteObject.transform.Find("ThumbnailCamera") != null)
                 {
-                    noteObject = Instantiate(noteObject);
+                    //noteObject = Instantiate(noteObject);
                     // do stuff 
-                    try
-                    {
+                    //try
+                    //{
                         ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(targetDescriptor));
                         EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
-                    }
-                    catch (System.Exception e)
-                    {
-                        EditorUtility.DisplayDialog("Error!", e.Message, "OK");
-                        DestroyImmediate(noteObject);
-                    }
+                    //}
+                   //catch (System.Exception e)
+                    //{
+                    //   EditorUtility.DisplayDialog("Error!", e.Message, "OK");
+                    //    DestroyImmediate(noteObject);
+                    //}
                 }
                 else
                 {
