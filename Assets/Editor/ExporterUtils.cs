@@ -63,7 +63,14 @@ public static class ExporterUtils
             }
         }
 
-        // Lightmapping.Bake(); do this a bit earlier on
+        // First, unpack all prefabs
+        foreach (GameObject subObject in GameObject.FindObjectsOfType<GameObject>())
+        {
+            if (PrefabUtility.GetPrefabInstanceStatus(subObject) != PrefabInstanceStatus.NotAPrefab)
+            {
+                PrefabUtility.UnpackPrefabInstance(PrefabUtility.GetOutermostPrefabInstanceRoot(subObject), PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            }
+        }
 
         // Skybox Stuff
 

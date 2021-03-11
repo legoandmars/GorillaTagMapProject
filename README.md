@@ -9,7 +9,12 @@ This guide is pretty long and in-depth, so make sure to read it thoroughly. If y
   * [Setup](#setup)
   * [Creating a map](#creating-a-map)
   * [Spawn Points](#spawn-points)
-  * [Matching Gorilla Tag's Style](#matching-gorilla-tags-style)
+  * [Matching Gorilla Tag's Style](#matching-gorilla-tag-s-style)
+  * [Lighting](#lighting)
+    + [Lighting Setup](#lighting-setup)
+    + [Lighting Meshes](#lighting-meshes)
+    + [Lights](#lights)
+    + [Other Tips](#other-tips)
   * [Triggers](#triggers)
     + [TagZone](#tagzone)
     + [TeleporterZone](#teleporterzone)
@@ -63,7 +68,9 @@ Here's what each setting does:
 - Gravity speed
     - The speed of gravity on your map
     - It's recommended to leave this at -9.8 unless you want to make maps with lower/higher gravity (eg, space maps)
-
+- Export Lighting
+    - Whether or not to generate lightmaps for your map
+    - Please read the [Lighting Section](#lighting) for more information.
 ## Spawn Points
 If you want people to be able to teleport to your map you'll need to add some Spawn Points.
 
@@ -92,6 +99,63 @@ Additionally, if you want to make a model low poly you can add a Decimate modifi
 ![Decimate Modifier in blender being applied](https://i.imgur.com/ijne3mw.gif)
 
 Getting the art style exactly right can be hard, so make sure to join the [Gorilla Tag Modding Discord](https://discord.gg/b2MhDBAzTv) if you need help or want some textures other people have made.
+
+## Lighting
+An important part of making a map look good is the lighting. Since Gorilla Tag bakes lighting, the process to get it working is a bit involved, but it's absolutely worth it.
+
+**When you SHOULD use lighting:**
+- Most maps
+- Complex maps with many objects
+- Maps that need shadows
+- Maps with reflections
+
+**When you SHOULDN'T use lighting:**
+- Maps that consist of mostly Unlit shaders
+    - For example, N64 maps, minecraft maps, etc
+- Maps where shadows aren't important
+- Maps that really need to save filesize
+
+If your map falls under the "SHOULDN'T USE LIGHTING" category, you can set your map's `Export Lighting` value to false and ignore the rest of this section.
+
+Otherwise, follow these steps to getting lighting looking nice on your map:
+
+### Lighting Setup
+Make sure to set your map's `Export Lighting` value to true.
+
+Click on your map's GameObject, and set the `Static` value next to the name in the properties window to true.
+
+When ask if you'd like to enable the static flags for all the child objects, click `Yes, change children`
+
+Every object on your map should be static EXCEPT for:
+- Objects that have an animation
+- Objects that will somehow change or get enabled/disabled, such as a trigger
+- Objects that should not have shadows
+
+### Lighting Meshes
+When you're initially importing a mesh, go to the properties and make sure that the `Generate Lightmap UVs` box is checked. 
+
+Go through all of your imported meshes now and make sure it's enabled for **all of them!** (unless you know what you're doing and have applied Lightmap UVs in an external program)
+
+Next, go to each object with a `Mesh Renderer` in the scene, and ensure that `Contribute Global Illumination` is enabled. If you want to disable an object Receiving/Casting shadows, mess with the `Cast Shadows` and `Receive Shadows` properties - otherwise, leave them as the default values.
+
+### Lights
+Your map includes a `Directional Light` by default. Don't remove this unless you know what you're doing, as it (pretty accurately) recreates the base game lighting.
+
+You can add any other sort of `Light` to your map that you want, but ensure that the type is set to `Baked`.
+
+### Other Tips
+Map compile time when baking lighting for the first time may be high. There's not much of a workaround here, so just wait for it to finish. Subsequent exports will be significantly faster.
+
+By default, your map preview in-editor won't have shadows or proper lighting. If you want a preview of how it looks, go to `Window/Rendering/Lighting Settings` and click `Generate Lighting` in the bottom right. If you want to get rid of the baked preview data, click the little arrow next to `Generate Lighting` and click `Clear Baked Data.`
+
+If your map is looking too light or you want to play around with how the lighting works, try adjusting the intensity of the included `Directional Light.`
+
+If some materials look washed out ingame, try changing these settings on those materials:
+- Set Metallic to 0
+- Set Smoothness to 0
+- Turn off Specular Highlights
+- Turn off Reflections
+
 
 ## Triggers
 This project contains several triggers meant to add functionality and make map-making easier. These triggers have a physical appearance to make things easier for map makers. This physical appearance is removed on build, though, so don't worry about it ending up in the final map - it's all taken care of for you.
@@ -194,6 +258,7 @@ Once your map is all done, it's time to export! First, let's run through our che
 - Did you add at least one `TeleporterTreehouse` to your map?
     - Not technically required, but without one players won't be able to get back to the treehouse 
     - Make sure your `TeleporterTreehouse`s are in an a semi-obvious spot so players can easily leave if they need to.
+- Did you read over the [lighting section](#lighting) and follow all the steps?
 - If you're using Teleporters, double check that the Teleporter Points are set properly.
 - Double check all of your Triggers to ensure that options are set properly.
 
@@ -209,10 +274,6 @@ Select the folder to export to (probably your Gorilla Tag's custom map folder at
 
 **You're all done!** Go test out your map ingame.
 
-If your materials look washed out ingame, try changing these settings on them:
-- Set Metallic to 0
-- Set Smoothness to 0
-- Turn off Specular Highlights
-- Turn off Reflections
+If your map doesn't look quite right in game, read back over the [Lighting section](#lighting)
 
 Once your map is done, join the [Gorilla Tag Modding Discord](https://discord.gg/b2MhDBAzTv) and share it so people can play!
