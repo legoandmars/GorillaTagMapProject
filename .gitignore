@@ -73,3 +73,5 @@ crashlytics-build.properties
 # Ignore temporary lightmaps and export scene
 /[Aa]ssets/Editor/ExportScene/*
 /[Aa]ssets/Editor/ExportScene.unity
+/[Aa]ssets/Editor/ExportScene.unity.meta
+/[Aa]ssets/Editor/ExportScene.meta
