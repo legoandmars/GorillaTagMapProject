@@ -84,7 +84,7 @@ public static class ExporterUtils
             skybox.transform.localPosition = Vector3.zero;
             skybox.transform.localRotation = Quaternion.identity;
             Object.DestroyImmediate(skybox.GetComponent<Collider>());
-            Material skyboxMaterial = new Material(Shader.Find("Skybox/Cubemap"));
+            Material skyboxMaterial = new Material(Shader.Find("Bobbie/Outer"));
             skyboxMaterial.SetTexture("_Tex", mapDescriptor.CustomSkybox);
             skybox.GetComponent<Renderer>().material = skyboxMaterial;
             skybox.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

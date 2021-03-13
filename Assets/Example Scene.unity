@@ -8662,7 +8662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MapName: gkz_beginnerblock
-  AuthorName: Graic
+  AuthorName: Sneakyevil
   Description: A large tower.
   SpawnPoints: []
   CustomSkybox: {fileID: 0}

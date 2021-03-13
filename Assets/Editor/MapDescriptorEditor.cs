@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using VmodMonkeMapLoader.Behaviours;
 
-[CustomEditor(typeof(MapDescriptor))]
+[CustomEditor(typeof(VmodMonkeMapLoader.Behaviours.MapDescriptor))]
 public class MapDescriptorEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        MapDescriptor targetDescriptor = (MapDescriptor)target;
+        VmodMonkeMapLoader.Behaviours.MapDescriptor targetDescriptor = (VmodMonkeMapLoader.Behaviours.MapDescriptor)target;
 
         DrawDefaultInspector();
 
