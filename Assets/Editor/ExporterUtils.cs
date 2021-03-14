@@ -36,6 +36,8 @@ public static class ExporterUtils
         string assetBundleScenePath = $"Assets/Editor/ExportScene.unity";
 
         string oldScenePath = gameObject.scene.path;
+        if (oldScenePath != null) EditorSceneManager.SaveScene(gameObject.scene);
+
         Selection.activeObject = gameObject;
         MapDescriptor mapDescriptor = gameObject.GetComponent<MapDescriptor>();
         if (!mapDescriptor.ExportLighting)
