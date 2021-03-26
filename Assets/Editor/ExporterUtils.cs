@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,26 @@ using VmodMonkeMapLoader.Behaviours;
 public static class ExporterUtils
 {
     static bool DebugPrefabs = false;
+
+    public static bool BuildTargetInstalled(BuildTarget target)
+    {
+        // Unity, why do I have to use reflection for this?
+        // Why?
+        // Wrapped in a try catch because it can be wacky and give errors sometimes
+        try
+        {
+            var moduleManager = System.Type.GetType("UnityEditor.Modules.ModuleManager, UnityEditor.dll");
+            var isPlatformSupportLoaded = moduleManager.GetMethod("IsPlatformSupportLoaded", BindingFlags.Static | BindingFlags.NonPublic);
+            var getTargetStringFromBuildTarget = moduleManager.GetMethod("GetTargetStringFromBuildTarget", BindingFlags.Static | BindingFlags.NonPublic);
+
+            return (bool)isPlatformSupportLoaded.Invoke(null, new object[] { (string)getTargetStringFromBuildTarget.Invoke(null, new object[] { target }) });
+        }
+        catch
+        {
+            Debug.Log("Checking for build target failed, reverting to true");
+            return true;
+        }
+    }
 
     public static PackageJSON MapDescriptorToJSON(MapDescriptor mapDescriptor)
     {
@@ -199,6 +220,12 @@ public static class ExporterUtils
                     Vector3 newVector = RotatePointAroundPivot(rendererTransform.lossyScale, new Vector3(0, 0, 0), rendererTransform.rotation.eulerAngles);
                     renderer.sharedMaterial.SetVector("_ScaleVector", newVector);
                 }
+            }
+
+            // Destroy all non-render cameras because people keep accidentally exporting them
+            foreach(Camera camera in gameObject.GetComponentsInChildren<Camera>())
+            {
+                if(camera.targetTexture == null && camera.gameObject != null) Object.DestroyImmediate(camera.gameObject);
             }
 
             // Lighting stuff. Make sure to set light stuff up and make it bigger, and bake

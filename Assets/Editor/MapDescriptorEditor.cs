@@ -16,9 +16,10 @@ public class MapDescriptorEditor : Editor
 
         if (GUILayout.Button("Export Map"))
         {
+            if (!ExporterUtils.BuildTargetInstalled(BuildTarget.Android) && EditorUtility.DisplayDialog("Android Build Support missing", "You don't have Android Build Support installed for this Unity version. Please install it and do NOT continue unless you know for sure what you're doing.", "Cancel", "Continue Anyways")) return;
+
             GameObject noteObject = targetDescriptor.gameObject;
             string path = EditorUtility.SaveFilePanel("Save map file", "", targetDescriptor.MapName + ".gtmap", "gtmap");
-            Debug.Log(path == "");
 
             if (path != "")
             {
@@ -26,27 +27,13 @@ public class MapDescriptorEditor : Editor
 
                 if (noteObject.transform.Find("ThumbnailCamera") != null)
                 {
-                    //noteObject = Instantiate(noteObject);
-                    // do stuff 
-                    //try
-                    //{
-                        ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(targetDescriptor));
-                        EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
-                    //}
-                   //catch (System.Exception e)
-                    //{
-                    //   EditorUtility.DisplayDialog("Error!", e.Message, "OK");
-                    //    DestroyImmediate(noteObject);
-                    //}
+                    ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(targetDescriptor));
+                    EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
                 }
                 else
                 {
                     EditorUtility.DisplayDialog("Exportation Failed!", "No thumbnail camera.", "OK");
                 }
-            }
-            else
-            {
-                EditorUtility.DisplayDialog("Exportation Failed!", "Path is invalid.", "OK");
             }
             Debug.Log("YOO");
         }

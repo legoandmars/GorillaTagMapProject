@@ -45,8 +45,8 @@ public class CompileMapWindow : EditorWindow
         scrollPosition = GUI.BeginScrollView(new Rect(0, 0, EditorGUIUtility.currentViewWidth, window.position.size.y), scrollPosition, new Rect(0, 0, EditorGUIUtility.currentViewWidth - 20, ScrollSpace), false, false);
 
         //GUILayout.ScrollViewScope
-        GUILayout.Label("Notes", EditorStyles.boldLabel, GUILayout.Height(16));
-        GUILayout.Space(20);
+        GUILayout.Label("Maps:", EditorStyles.boldLabel, GUILayout.Height(16));
+        GUILayout.Space(10);
 
         foreach (MapDescriptor note in notes)
         {
@@ -58,11 +58,12 @@ public class CompileMapWindow : EditorWindow
 
                 if (GUILayout.Button("Export " + note.MapName, GUILayout.Width(windowWidthIncludingScrollbar - 40), GUILayout.Height(20)))
                 {
+                    if (!ExporterUtils.BuildTargetInstalled(BuildTarget.Android) && EditorUtility.DisplayDialog("Android Build Support missing", "You don't have Android Build Support installed for this Unity version. Please install it and do NOT continue unless you know for sure what you're doing.", "Cancel", "Continue Anyways")) return;
+
                     GameObject noteObject = note.gameObject;
                     if (noteObject != null && note != null)
                     {
                         string path = EditorUtility.SaveFilePanel("Save map file", "", note.MapName + ".gtmap", "gtmap");
-                        Debug.Log(path == "");
 
                         if (path != "")
                         {
@@ -87,10 +88,6 @@ public class CompileMapWindow : EditorWindow
                             {
                                 EditorUtility.DisplayDialog("Exportation Failed!", "No thumbnail camera.", "OK");
                             }
-                        }
-                        else
-                        {
-                            EditorUtility.DisplayDialog("Exportation Failed!", "Path is invalid.", "OK");
                         }
                     }
                     else

@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1595161081685909417}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: -0.59341973, z: 0}
-  m_LocalScale: {x: 0.9232561, y: 0.9232562, z: 0.5011967}
+  m_LocalScale: {x: 92.32561, y: 92.32562, z: 50.11967}
   m_Children: []
   m_Father: {fileID: 8903016630705242752}
   m_RootOrder: 1
@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1595161081685909417}
-  m_Mesh: {fileID: 2780745323591785751, guid: d258e7da3b649ff47a6181a150d23e7a, type: 3}
+  m_Mesh: {fileID: 2780745323591785751, guid: 5fc491c315848dd4889449a71e266850, type: 3}
 --- !u!23 &123968306013997561
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -98,7 +98,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 2780745323591785751, guid: d258e7da3b649ff47a6181a150d23e7a, type: 3}
+  m_Mesh: {fileID: 2780745323591785751, guid: 5fc491c315848dd4889449a71e266850, type: 3}
 --- !u!1 &3652938009996316484
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +220,7 @@ Transform:
   m_GameObject: {fileID: 8080799496420215429}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: -0.15938477, z: 0}
-  m_LocalScale: {x: 0.9232561, y: 0.9232562, z: 0.58564824}
+  m_LocalScale: {x: 92.32561, y: 92.32562, z: 58.56482}
   m_Children: []
   m_Father: {fileID: 8903016630705242752}
   m_RootOrder: 0
@@ -232,7 +232,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8080799496420215429}
-  m_Mesh: {fileID: 2534964839176971238, guid: d258e7da3b649ff47a6181a150d23e7a, type: 3}
+  m_Mesh: {fileID: 2534964839176971238, guid: 5fc491c315848dd4889449a71e266850, type: 3}
 --- !u!23 &780375628425383573
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -286,7 +286,7 @@ GameObject:
   - component: {fileID: 8903016630705242757}
   - component: {fileID: 8903016630705242756}
   m_Layer: 0
-  m_Name: TreehouseTeleporter
+  m_Name: TeleporterTreehouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -381,8 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: -602232758, guid: 70a90590c1ba1d249877485b1e78f3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TouchType: 0
+  Delay: 1.25
   TeleportPoints: []
   TagOnTeleport: 0
-  TeleportDelay: 0
-  JoinGameOnTeleport: 0
-  GoesToTreehouse: 0
