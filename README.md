@@ -146,6 +146,10 @@ You can add any other sort of `Light` to your map that you want, but ensure that
 ### Other Tips
 Map compile time when baking lighting for the first time may be high. There's not much of a workaround here, so just wait for it to finish. Subsequent exports will be significantly faster.
 
+If your map is too big or laggy after adding lighting, you can change these values in Window/Rendering/Lighting Settings:
+- Lightmap Resolution (Default 32) - Change to 16 or 8
+- Lightmap Size (Default 512) - Change to 256 or 128
+
 By default, your map preview in-editor won't have shadows or proper lighting. If you want a preview of how it looks, go to `Window/Rendering/Lighting Settings` and click `Generate Lighting` in the bottom right. If you want to get rid of the baked preview data, click the little arrow next to `Generate Lighting` and click `Clear Baked Data.`
 
 If your map is looking too light or you want to play around with how the lighting works, try adjusting the intensity of the included `Directional Light.`
