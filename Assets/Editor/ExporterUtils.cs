@@ -65,6 +65,9 @@ public static class ExporterUtils
         if (oldScenePath != null) EditorSceneManager.SaveScene(gameObject.scene);
         try
         {
+            // Disable scene checking because it'll be loading the scene to export
+            SceneChecker.disabled = true;
+
             Selection.activeObject = gameObject;
             MapDescriptor mapDescriptor = gameObject.GetComponent<MapDescriptor>();
 
@@ -78,10 +81,19 @@ public static class ExporterUtils
                 Lightmapping.ClearLightingDataAsset();
             }
 
-            //EditorSceneManager.MarkSceneDirty(gameObject.scene);
+            //Check if editor folder exists just in case, since some people move it accidentally or something
+            if (!AssetDatabase.IsValidFolder("Assets/Editor"))
+            {
+                Debug.LogWarning("The Editor folder does not exist. You may have installed the project incorrectly, or dragged the Editor folder into a subfolder.");
+                Debug.LogWarning("If you experience problems with exporting, make sure your Editor folder is in the right place. If it still doesn't work, reinstall this unity project and make sure to follow the install instructions.");
+                Debug.LogWarning("Trying to export anyways...");
+                AssetDatabase.CreateFolder("Assets", "Editor");
+            }
             EditorSceneManager.SaveScene(gameObject.scene, assetBundleScenePath, true);
 
             EditorSceneManager.OpenScene(assetBundleScenePath);
+
+            // Destroy other maps that exist
             MapDescriptor[] descriptorList = Object.FindObjectsOfType<MapDescriptor>();
             foreach (MapDescriptor descriptor in descriptorList)
             {
@@ -97,7 +109,16 @@ public static class ExporterUtils
                 }
             }
 
-            // First, unpack all prefabs
+            // Move objects that aren't in the map parent to the map parent
+            foreach(GameObject sceneRootObject in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                if(sceneRootObject != gameObject)
+                {
+                    sceneRootObject.transform.SetParent(gameObject.transform);
+                }
+            }
+
+            // Unpack all prefabs
             foreach (GameObject subObject in GameObject.FindObjectsOfType<GameObject>())
             {
                 if (PrefabUtility.GetPrefabInstanceStatus(subObject) != PrefabInstanceStatus.NotAPrefab)
@@ -169,7 +190,7 @@ public static class ExporterUtils
             if (mapDescriptor.SpawnPoints.Length == 0) throw new System.Exception("No spawn points found! Add some spawn points to your map.");
 
             // Take Screenshots with the thumbnail camera
-            Camera thumbnailCamera = gameObject.transform.Find("ThumbnailCamera")?.GetComponent<Camera>();
+            Camera thumbnailCamera = GameObject.Find("ThumbnailCamera")?.GetComponent<Camera>();
             if (thumbnailCamera != null)
             {
                 // Normal Screenshot
@@ -185,11 +206,8 @@ public static class ExporterUtils
                 packageJSON.config.cubemapImagePath = "preview_cubemap.png";
 
                 packageJSON.config.mapColor = AverageColor(screenshotCubemap);
-                /* quest stuff (disabled for now)
-                byte[] screenshotRaw = screenshot.GetRawTextureData();
-                File.WriteAllBytes(Application.temporaryCachePath + "/preview_quest", screenshotRaw);
-                */
             }
+            else throw new System.Exception("ThumbnailCamera is missing! Make sure to add a ThumbnailCamera to your map.");
             Object.DestroyImmediate(thumbnailCamera.gameObject);
 
             // Pre-Process stuff for both platforms - PC and Android.
@@ -235,6 +253,12 @@ public static class ExporterUtils
             foreach(Camera camera in gameObject.GetComponentsInChildren<Camera>())
             {
                 if(camera.targetTexture == null && camera.gameObject != null) Object.DestroyImmediate(camera.gameObject);
+            }
+
+            //Destroy Audio listeners too since they can break sound
+            foreach (AudioListener listener in gameObject.GetComponentsInChildren<AudioListener>())
+            {
+                if (listener != null) Object.DestroyImmediate(listener);
             }
 
             // Lighting stuff. Make sure to set light stuff up and make it bigger, and bake
@@ -293,7 +317,7 @@ public static class ExporterUtils
                 }
             }
 
-            foreach (TagZone zone in gameObject.GetComponentsInChildren<TagZone>())
+            foreach (TagZone zone in gameObject.GetComponentsInChildren<TagZone>(true))
             {
                 if (zone != null && zone.gameObject != null)
                 {
@@ -302,7 +326,7 @@ public static class ExporterUtils
                 }
             }
 
-            foreach (SurfaceClimbSettings surfaceClimbSettings in gameObject.GetComponentsInChildren<SurfaceClimbSettings>())
+            foreach (SurfaceClimbSettings surfaceClimbSettings in gameObject.GetComponentsInChildren<SurfaceClimbSettings>(true))
             {
                 if (surfaceClimbSettings != null && surfaceClimbSettings.gameObject != null)
                 {
@@ -316,7 +340,7 @@ public static class ExporterUtils
             }
 
             int triggerCount = 1;
-            foreach (ObjectTrigger objectTrigger in gameObject.GetComponentsInChildren<ObjectTrigger>())
+            foreach (ObjectTrigger objectTrigger in gameObject.GetComponentsInChildren<ObjectTrigger>(true))
             {
                 if (objectTrigger != null && objectTrigger.gameObject != null)
                 {
@@ -337,7 +361,7 @@ public static class ExporterUtils
             }
 
             int teleporterCount = 1;
-            foreach (Teleporter teleporter in gameObject.GetComponentsInChildren<Teleporter>())
+            foreach (Teleporter teleporter in gameObject.GetComponentsInChildren<Teleporter>(true))
             {
                 if (teleporter != null && teleporter.gameObject != null)
                 {
@@ -359,7 +383,7 @@ public static class ExporterUtils
                 }
             }
 
-            RoundEndActions roundEndActions = gameObject.GetComponentInChildren<RoundEndActions>();
+            RoundEndActions roundEndActions = gameObject.GetComponentInChildren<RoundEndActions>(true);
             if (roundEndActions != null && roundEndActions.gameObject != null)
             {
                 foreach (GameObject roundEndActionObject in roundEndActions.ObjectsToEnable)
@@ -431,9 +455,13 @@ public static class ExporterUtils
 
             // Open scene again
             EditorSceneManager.OpenScene(oldScenePath);
+
+            // Re-enable scene checking
+            SceneChecker.disabled = false;
         }
         catch(System.Exception e)
         {
+            SceneChecker.disabled = false;
             Debug.Log("Something went wrong... let's load the old scene.");
             if (oldScenePath != null)
             {
@@ -481,7 +509,7 @@ public static class ExporterUtils
 
     public static Texture2D CaptureCubemap(Camera cam, int width, int height)
     {
-        cam = Object.Instantiate(cam.gameObject).GetComponent<Camera>();
+        cam = UnityEngine.Object.Instantiate(cam.gameObject, cam.transform.parent).GetComponent<Camera>();
         var render_texture = new RenderTexture(width, height, 16, RenderTextureFormat.ARGB32);
         var equi_texture = RenderTexture.GetTemporary(width, height, 16, RenderTextureFormat.ARGB32);
         var tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
@@ -502,8 +530,7 @@ public static class ExporterUtils
 
     public static Texture2D CaptureScreenshot(Camera cam, int width, int height)
     {
-        cam = Object.Instantiate(cam.gameObject).GetComponent<Camera>();
-
+        cam = UnityEngine.Object.Instantiate(cam.gameObject, cam.transform.parent).GetComponent<Camera>();
         RenderTexture renderTex = RenderTexture.GetTemporary(width, height, 16, RenderTextureFormat.ARGB32);
         Texture2D tex = new Texture2D(width, height, TextureFormat.RGB24, false);
 
