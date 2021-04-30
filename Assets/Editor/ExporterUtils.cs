@@ -246,6 +246,12 @@ public static class ExporterUtils
                 if(camera.targetTexture == null && camera.gameObject != null) Object.DestroyImmediate(camera.gameObject);
             }
 
+            //Destroy Audio listeners too since they can break sound
+            foreach (AudioListener listener in gameObject.GetComponentsInChildren<AudioListener>())
+            {
+                if (listener != null) Object.DestroyImmediate(listener);
+            }
+
             // Lighting stuff. Make sure to set light stuff up and make it bigger, and bake
             if (mapDescriptor.ExportLighting)
             {
