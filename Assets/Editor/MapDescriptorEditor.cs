@@ -25,16 +25,9 @@ public class MapDescriptorEditor : Editor
             {
                 EditorUtility.SetDirty(targetDescriptor);
 
-                if (noteObject.transform.Find("ThumbnailCamera") != null)
-                {
-                    ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(targetDescriptor));
-                    EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
-                    EditorUtility.RevealInFinder(path);
-                }
-                else
-                {
-                    EditorUtility.DisplayDialog("Exportation Failed!", "No thumbnail camera.", "OK");
-                }
+                ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(targetDescriptor));
+                EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
+                EditorUtility.RevealInFinder(path);
             }
             Debug.Log("YOO");
         }

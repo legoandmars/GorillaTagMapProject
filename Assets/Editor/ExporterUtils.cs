@@ -178,7 +178,7 @@ public static class ExporterUtils
             if (mapDescriptor.SpawnPoints.Length == 0) throw new System.Exception("No spawn points found! Add some spawn points to your map.");
 
             // Take Screenshots with the thumbnail camera
-            Camera thumbnailCamera = gameObject.transform.Find("ThumbnailCamera")?.GetComponent<Camera>();
+            Camera thumbnailCamera = GameObject.Find("ThumbnailCamera")?.GetComponent<Camera>();
             if (thumbnailCamera != null)
             {
                 // Normal Screenshot
@@ -194,11 +194,8 @@ public static class ExporterUtils
                 packageJSON.config.cubemapImagePath = "preview_cubemap.png";
 
                 packageJSON.config.mapColor = AverageColor(screenshotCubemap);
-                /* quest stuff (disabled for now)
-                byte[] screenshotRaw = screenshot.GetRawTextureData();
-                File.WriteAllBytes(Application.temporaryCachePath + "/preview_quest", screenshotRaw);
-                */
             }
+            else throw new System.Exception("ThumbnailCamera is missing! Make sure to add a ThumbnailCamera to your map.");
             Object.DestroyImmediate(thumbnailCamera.gameObject);
 
             // Pre-Process stuff for both platforms - PC and Android.
@@ -541,4 +538,15 @@ public static class ExporterUtils
         point = dir + pivot; // calculate rotated point
         return point; // return it
     }
+
+    public static GameObject RecursiveFindChild(Transform parent, string childName)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == childName) return child.gameObject;
+            else return RecursiveFindChild(child, childName);
+        }
+        return null;
+    }
+
 }
