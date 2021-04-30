@@ -284,7 +284,7 @@ public static class ExporterUtils
                 }
             }
 
-            foreach (TagZone zone in gameObject.GetComponentsInChildren<TagZone>())
+            foreach (TagZone zone in gameObject.GetComponentsInChildren<TagZone>(true))
             {
                 if (zone != null && zone.gameObject != null)
                 {
@@ -293,7 +293,7 @@ public static class ExporterUtils
                 }
             }
 
-            foreach (SurfaceClimbSettings surfaceClimbSettings in gameObject.GetComponentsInChildren<SurfaceClimbSettings>())
+            foreach (SurfaceClimbSettings surfaceClimbSettings in gameObject.GetComponentsInChildren<SurfaceClimbSettings>(true))
             {
                 if (surfaceClimbSettings != null && surfaceClimbSettings.gameObject != null)
                 {
@@ -307,7 +307,7 @@ public static class ExporterUtils
             }
 
             int triggerCount = 1;
-            foreach (ObjectTrigger objectTrigger in gameObject.GetComponentsInChildren<ObjectTrigger>())
+            foreach (ObjectTrigger objectTrigger in gameObject.GetComponentsInChildren<ObjectTrigger>(true))
             {
                 if (objectTrigger != null && objectTrigger.gameObject != null)
                 {
@@ -328,7 +328,7 @@ public static class ExporterUtils
             }
 
             int teleporterCount = 1;
-            foreach (Teleporter teleporter in gameObject.GetComponentsInChildren<Teleporter>())
+            foreach (Teleporter teleporter in gameObject.GetComponentsInChildren<Teleporter>(true))
             {
                 if (teleporter != null && teleporter.gameObject != null)
                 {
@@ -350,7 +350,7 @@ public static class ExporterUtils
                 }
             }
 
-            RoundEndActions roundEndActions = gameObject.GetComponentInChildren<RoundEndActions>();
+            RoundEndActions roundEndActions = gameObject.GetComponentInChildren<RoundEndActions>(true);
             if (roundEndActions != null && roundEndActions.gameObject != null)
             {
                 foreach (GameObject roundEndActionObject in roundEndActions.ObjectsToEnable)
