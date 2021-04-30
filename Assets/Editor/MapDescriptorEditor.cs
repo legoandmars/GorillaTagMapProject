@@ -29,6 +29,7 @@ public class MapDescriptorEditor : Editor
                 {
                     ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(targetDescriptor));
                     EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
+                    EditorUtility.RevealInFinder(path);
                 }
                 else
                 {
