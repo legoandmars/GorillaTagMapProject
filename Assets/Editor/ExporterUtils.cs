@@ -43,6 +43,10 @@ public static class ExporterUtils
         packageJSON.descriptor.description = mapDescriptor.Description;
         packageJSON.config.imagePath = null;
         packageJSON.config.gravity = mapDescriptor.GravitySpeed;
+        packageJSON.config.slowJumpLimit = mapDescriptor.SlowJumpLimit;
+        packageJSON.config.slowJumpMultiplier = mapDescriptor.SlowJumpMultiplier;
+        packageJSON.config.fastJumpLimit = mapDescriptor.FastJumpLimit;
+        packageJSON.config.fastJumpMultiplier = mapDescriptor.FastJumpMultiplier;
         // do config stuff here
         return packageJSON;
     }
@@ -66,6 +70,11 @@ public static class ExporterUtils
 
             Selection.activeObject = gameObject;
             MapDescriptor mapDescriptor = gameObject.GetComponent<MapDescriptor>();
+
+            // Compute Required Versions
+            System.Version pcRequiredVersion = ComputePcVersion(mapDescriptor);
+            System.Version androidRequiredVersion = ComputeAndroidVersion(mapDescriptor);
+
             if (!mapDescriptor.ExportLighting)
             {
                 Lightmapping.Clear();
@@ -413,6 +422,8 @@ public static class ExporterUtils
             // JSON stuff
             packageJSON.androidFileName = androidFileName;
             packageJSON.pcFileName = pcFileName;
+            packageJSON.descriptor.pcRequiredVersion = pcRequiredVersion.ToString();
+            packageJSON.descriptor.androidRequiredVersion = androidRequiredVersion.ToString();
             string json = JsonUtility.ToJson(packageJSON, true);
             File.WriteAllText(Application.temporaryCachePath + "/package.json", json);
             // AssetDatabase.DeleteAsset($"Assets/_{typeName}.prefab");
@@ -534,6 +545,29 @@ public static class ExporterUtils
         return tex;
     }
 
+    public static System.Version ComputePcVersion(MapDescriptor mapDescriptor)
+	{
+        System.Version requiredVersion = new System.Version("1.0.0");
+        System.Version v110 = new System.Version("1.1.0");
+        if (mapDescriptor.SlowJumpLimit != 6.5f || mapDescriptor.SlowJumpMultiplier != 1.1f || mapDescriptor.FastJumpLimit != 8.5f || mapDescriptor.FastJumpMultiplier != 1.3f)
+		{
+            Debug.Log($"{mapDescriptor.SlowJumpLimit}, {mapDescriptor.SlowJumpMultiplier}, {mapDescriptor.FastJumpLimit}, {mapDescriptor.FastJumpMultiplier}");
+            requiredVersion = MaxVersion(requiredVersion, v110);
+		}
+        return requiredVersion;
+	}
+
+    public static System.Version ComputeAndroidVersion(MapDescriptor mapDescriptor)
+	{
+        System.Version requiredVersion = new System.Version("1.0.0");
+        System.Version v110 = new System.Version("1.1.0");
+        if (mapDescriptor.SlowJumpLimit != 6.5f || mapDescriptor.SlowJumpMultiplier != 1.1f || mapDescriptor.FastJumpLimit != 8.5f || mapDescriptor.FastJumpMultiplier != 1.3f)
+		{
+            requiredVersion = MaxVersion(requiredVersion, v110);
+		}
+        return requiredVersion;
+	}
+
     public static Color AverageColor(Texture2D tex)
     {
         Color[] colors = tex.GetPixels();
@@ -551,4 +585,9 @@ public static class ExporterUtils
         point = dir + pivot; // calculate rotated point
         return point; // return it
     }
+
+    public static System.Version MaxVersion(System.Version a, System.Version b)
+	{
+        return (a.CompareTo(b) > 0) ? a : b;
+	}
 }
