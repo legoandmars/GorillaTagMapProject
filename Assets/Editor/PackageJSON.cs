@@ -13,6 +13,8 @@ public class Descriptor
     public string objectName;
     public string author;
     public string description;
+    public string androidRequiredVersion;
+    public string pcRequiredVersion;
 }
 
 [System.Serializable]
@@ -23,6 +25,10 @@ public class Config
     public string[] spawnPoints;
     public UnityEngine.Color mapColor;
     public float gravity = -9.8f;
+    public float slowJumpLimit = 6.5f;
+    public float fastJumpLimit = 8.5f;
+    public float slowJumpMultiplier = 1.1f;
+    public float fastJumpMultiplier = 1.3f;
 }
 
 [System.Serializable]
