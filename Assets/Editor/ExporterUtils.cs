@@ -80,6 +80,8 @@ public static class ExporterUtils
             EditorSceneManager.SaveScene(gameObject.scene, assetBundleScenePath, true);
 
             EditorSceneManager.OpenScene(assetBundleScenePath);
+
+            // Destroy other maps that exist
             MapDescriptor[] descriptorList = Object.FindObjectsOfType<MapDescriptor>();
             foreach (MapDescriptor descriptor in descriptorList)
             {
@@ -95,7 +97,16 @@ public static class ExporterUtils
                 }
             }
 
-            // First, unpack all prefabs
+            // Move objects that aren't in the map parent to the map parent
+            foreach(GameObject sceneRootObject in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                if(sceneRootObject != gameObject)
+                {
+                    sceneRootObject.transform.SetParent(gameObject.transform);
+                }
+            }
+
+            // Unpack all prefabs
             foreach (GameObject subObject in GameObject.FindObjectsOfType<GameObject>())
             {
                 if (PrefabUtility.GetPrefabInstanceStatus(subObject) != PrefabInstanceStatus.NotAPrefab)
@@ -477,7 +488,7 @@ public static class ExporterUtils
 
     public static Texture2D CaptureCubemap(Camera cam, int width, int height)
     {
-        cam = UnityEngine.Object.Instantiate(cam.gameObject).GetComponent<Camera>();
+        cam = UnityEngine.Object.Instantiate(cam.gameObject, cam.transform.parent).GetComponent<Camera>();
         var render_texture = new RenderTexture(width, height, 16, RenderTextureFormat.ARGB32);
         var equi_texture = RenderTexture.GetTemporary(width, height, 16, RenderTextureFormat.ARGB32);
         var tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
@@ -498,8 +509,7 @@ public static class ExporterUtils
 
     public static Texture2D CaptureScreenshot(Camera cam, int width, int height)
     {
-        cam = UnityEngine.Object.Instantiate(cam.gameObject).GetComponent<Camera>();
-
+        cam = UnityEngine.Object.Instantiate(cam.gameObject, cam.transform.parent).GetComponent<Camera>();
         RenderTexture renderTex = RenderTexture.GetTemporary(width, height, 16, RenderTextureFormat.ARGB32);
         Texture2D tex = new Texture2D(width, height, TextureFormat.RGB24, false);
 
