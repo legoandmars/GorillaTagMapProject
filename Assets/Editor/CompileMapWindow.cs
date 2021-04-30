@@ -77,6 +77,7 @@ public class CompileMapWindow : EditorWindow
                                 {
                                     ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(note));
                                     EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
+                                    EditorUtility.RevealInFinder(path);
                                 }
                                 catch(System.Exception e)
                                 {
