@@ -29,7 +29,6 @@ public class MapDescriptorEditor : Editor
                 EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
                 EditorUtility.RevealInFinder(path);
             }
-            Debug.Log("YOO");
         }
     }
 }

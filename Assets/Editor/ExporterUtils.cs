@@ -61,6 +61,9 @@ public static class ExporterUtils
         if (oldScenePath != null) EditorSceneManager.SaveScene(gameObject.scene);
         try
         {
+            // Disable scene checking because it'll be loading the scene to export
+            SceneChecker.disabled = true;
+
             Selection.activeObject = gameObject;
             MapDescriptor mapDescriptor = gameObject.GetComponent<MapDescriptor>();
             if (!mapDescriptor.ExportLighting)
@@ -435,9 +438,13 @@ public static class ExporterUtils
 
             // Open scene again
             EditorSceneManager.OpenScene(oldScenePath);
+
+            // Re-enable scene checking
+            SceneChecker.disabled = false;
         }
         catch(System.Exception e)
         {
+            SceneChecker.disabled = false;
             Debug.Log("Something went wrong... let's load the old scene.");
             if (oldScenePath != null)
             {
@@ -538,15 +545,4 @@ public static class ExporterUtils
         point = dir + pivot; // calculate rotated point
         return point; // return it
     }
-
-    public static GameObject RecursiveFindChild(Transform parent, string childName)
-    {
-        foreach (Transform child in parent)
-        {
-            if (child.name == childName) return child.gameObject;
-            else return RecursiveFindChild(child, childName);
-        }
-        return null;
-    }
-
 }
