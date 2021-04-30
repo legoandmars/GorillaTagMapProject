@@ -69,7 +69,14 @@ public static class ExporterUtils
                 Lightmapping.ClearLightingDataAsset();
             }
 
-            //EditorSceneManager.MarkSceneDirty(gameObject.scene);
+            //Check if editor folder exists just in case, since some people move it accidentally or something
+            if (!AssetDatabase.IsValidFolder("Assets/Editor"))
+            {
+                Debug.LogWarning("The Editor folder does not exist. You may have installed the project incorrectly, or dragged the Editor folder into a subfolder.");
+                Debug.LogWarning("If you experience problems with exporting, make sure your Editor folder is in the right place. If it still doesn't work, reinstall this unity project and make sure to follow the install instructions.");
+                Debug.LogWarning("Trying to export anyways...");
+                AssetDatabase.CreateFolder("Assets", "Editor");
+            }
             EditorSceneManager.SaveScene(gameObject.scene, assetBundleScenePath, true);
 
             EditorSceneManager.OpenScene(assetBundleScenePath);
