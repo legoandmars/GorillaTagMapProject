@@ -8742,6 +8742,10 @@ MonoBehaviour:
   CustomSkybox: {fileID: 0}
   GravitySpeed: -9.8
   ExportLighting: 1
+  SlowJumpLimit: 6.5
+  FastJumpLimit: 8.5
+  SlowJumpMultiplier: 1.1
+  FastJumpMultiplier: 1.3
 --- !u!33 &5088129285855299583
 MeshFilter:
   m_ObjectHideFlags: 0
