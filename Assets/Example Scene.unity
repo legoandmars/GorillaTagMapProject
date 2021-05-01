@@ -8738,10 +8738,22 @@ MonoBehaviour:
   MapName: gkz_beginnerblock
   AuthorName: Sneakyevil
   Description: A large tower.
-  SpawnPoints: []
+  SpawnPoints:
+  - {fileID: 255055337}
+  - {fileID: 1550629950}
+  - {fileID: 1265123799}
+  - {fileID: 1881399761}
+  - {fileID: 967230046}
+  - {fileID: 350196993}
+  - {fileID: 2140027099}
+  - {fileID: 1710480344}
   CustomSkybox: {fileID: 0}
   GravitySpeed: -9.8
   ExportLighting: 1
+  SlowJumpLimit: 6.5
+  FastJumpLimit: 8.5
+  SlowJumpMultiplier: 1.1
+  FastJumpMultiplier: 1.3
 --- !u!33 &5088129285855299583
 MeshFilter:
   m_ObjectHideFlags: 0
