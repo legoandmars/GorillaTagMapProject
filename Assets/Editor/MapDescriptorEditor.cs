@@ -115,11 +115,16 @@ public class MapDescriptorEditor : Editor
                 EditorUtility.SetDirty(targetDescriptor);
 
                 ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(targetDescriptor));
-                EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
-                EditorUtility.RevealInFinder(path);
             }
         }
 
-        serializedObject.ApplyModifiedProperties();
+        try
+        {
+            serializedObject.ApplyModifiedProperties();
+        }
+        catch
+        {
+            // serialized object doesn't exist. sometimes this happens when switching scenes.
+        }
     }
 }

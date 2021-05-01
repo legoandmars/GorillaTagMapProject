@@ -12,6 +12,7 @@ using VmodMonkeMapLoader.Behaviours;
 public static class ExporterUtils
 {
     static bool DebugPrefabs = false;
+    static bool exporting = false;
 
     public static bool BuildTargetInstalled(BuildTarget target)
     {
@@ -54,6 +55,7 @@ public static class ExporterUtils
 
     public static void ExportPackage(GameObject gameObject, string path, string typeName, PackageJSON packageJSON)
     {
+        if (exporting) return;
         string fileName = Path.GetFileName(path);
         string folderPath = Path.GetDirectoryName(path);
         string androidFileName = Path.GetFileNameWithoutExtension(path) + "_android";
@@ -67,6 +69,7 @@ public static class ExporterUtils
         {
             // Disable scene checking because it'll be loading the scene to export
             SceneChecker.disabled = true;
+            exporting = true;
 
             Selection.activeObject = gameObject;
             MapDescriptor mapDescriptor = gameObject.GetComponent<MapDescriptor>();
@@ -110,9 +113,9 @@ public static class ExporterUtils
             }
 
             // Move objects that aren't in the map parent to the map parent
-            foreach(GameObject sceneRootObject in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+            foreach (GameObject sceneRootObject in EditorSceneManager.GetActiveScene().GetRootGameObjects())
             {
-                if(sceneRootObject != gameObject)
+                if (sceneRootObject != gameObject)
                 {
                     sceneRootObject.transform.SetParent(gameObject.transform);
                 }
@@ -250,9 +253,9 @@ public static class ExporterUtils
             }
 
             // Destroy all non-render cameras because people keep accidentally exporting them
-            foreach(Camera camera in gameObject.GetComponentsInChildren<Camera>())
+            foreach (Camera camera in gameObject.GetComponentsInChildren<Camera>())
             {
-                if(camera.targetTexture == null && camera.gameObject != null) Object.DestroyImmediate(camera.gameObject);
+                if (camera.targetTexture == null && camera.gameObject != null) Object.DestroyImmediate(camera.gameObject);
             }
 
             //Destroy Audio listeners too since they can break sound
@@ -266,6 +269,7 @@ public static class ExporterUtils
             {
                 foreach (Light light in Object.FindObjectsOfType<Light>())
                 {
+                    // needs to be redone, colors are inconsistent and can probably be made better
                     if (light.type == LightType.Directional)
                     {
                         light.intensity *= 11.54f;
@@ -277,198 +281,219 @@ public static class ExporterUtils
                     }
                 }
 
-                Lightmapping.Bake();
+                bool baking = Lightmapping.BakeAsync();
+                if (baking)
+                {
+                    Lightmapping.bakeCompleted -= PostBake;
+                    Lightmapping.bakeCompleted += PostBake;
+                }
+                else throw new System.Exception("Couldn't start lightmapping.");
             }
             else
             {
                 foreach (Light light in Object.FindObjectsOfType<Light>()) Object.DestroyImmediate(light);
                 Lightmapping.Clear();
                 Lightmapping.ClearLightingDataAsset();
+                PostBake();
             }
 
-            gameObject.transform.localPosition = new Vector3(0, 5000, 0);
+            void PostBake(){
+                gameObject.transform.localPosition = new Vector3(0, 5000, 0);
 
-            // Save as prefab and build
-            // PrefabUtility.SaveAsPrefabAsset(Selection.activeObject as GameObject, $"Assets/_{typeName}.prefab");
-            EditorSceneManager.SaveScene(gameObject.scene);
-            AssetBundleBuild assetBundleBuild = default;
-            assetBundleBuild.assetNames = new string[] { assetBundleScenePath };
-            assetBundleBuild.assetBundleName = pcFileName;
+                // Save as prefab and build
+                // PrefabUtility.SaveAsPrefabAsset(Selection.activeObject as GameObject, $"Assets/_{typeName}.prefab");
+                EditorSceneManager.SaveScene(gameObject.scene);
+                AssetBundleBuild assetBundleBuild = default;
+                assetBundleBuild.assetNames = new string[] { assetBundleScenePath };
+                assetBundleBuild.assetBundleName = pcFileName;
 
-            // Build for PC
+                // Build for PC
 
-            BuildPipeline.BuildAssetBundles(Application.temporaryCachePath, new AssetBundleBuild[] { assetBundleBuild }, 0, BuildTarget.StandaloneWindows64);
+                BuildPipeline.BuildAssetBundles(Application.temporaryCachePath, new AssetBundleBuild[] { assetBundleBuild }, 0, BuildTarget.StandaloneWindows64);
 
-            // Do Android specific stuff here. Stripping MonoBehaviours and converting them to TextAssets, etc.
+                // Do Android specific stuff here. Stripping MonoBehaviours and converting them to TextAssets, etc.
 
-            // first we need to redo this bit of code because sometimes gameObject unreferences itself
-            MapDescriptor[] descriptorList2 = Object.FindObjectsOfType<MapDescriptor>();
-            foreach (MapDescriptor descriptor in descriptorList2)
-            {
-                if (descriptor.MapName != mapDescriptor.MapName)
+                // first we need to redo this bit of code because sometimes gameObject unreferences itself
+                MapDescriptor[] descriptorList2 = Object.FindObjectsOfType<MapDescriptor>();
+                foreach (MapDescriptor descriptor in descriptorList2)
                 {
-                    Object.DestroyImmediate(descriptor.gameObject);
-                }
-                else
-                {
-                    mapDescriptor = descriptor;
-                    gameObject = descriptor.gameObject;
-                    Selection.activeObject = gameObject;
-                }
-            }
-
-            foreach (TagZone zone in gameObject.GetComponentsInChildren<TagZone>(true))
-            {
-                if (zone != null && zone.gameObject != null)
-                {
-                    CreateQuestText("{\"TagZone\": true}", zone.gameObject);
-                    Object.DestroyImmediate(zone);
-                }
-            }
-
-            foreach (SurfaceClimbSettings surfaceClimbSettings in gameObject.GetComponentsInChildren<SurfaceClimbSettings>(true))
-            {
-                if (surfaceClimbSettings != null && surfaceClimbSettings.gameObject != null)
-                {
-                    SurfaceClimbSettingsJSON settingsJson = new SurfaceClimbSettingsJSON();
-                    settingsJson.Unclimbable = surfaceClimbSettings.Unclimbable;
-                    settingsJson.slipPercentage = surfaceClimbSettings.slipPercentage;
-
-                    CreateQuestText(JsonUtility.ToJson(settingsJson), surfaceClimbSettings.gameObject);
-                    Object.DestroyImmediate(surfaceClimbSettings);
-                }
-            }
-
-            int triggerCount = 1;
-            foreach (ObjectTrigger objectTrigger in gameObject.GetComponentsInChildren<ObjectTrigger>(true))
-            {
-                if (objectTrigger != null && objectTrigger.gameObject != null)
-                {
-                    string objectName = "ObjectTrigger" + triggerCount;
-                    if (objectTrigger.ObjectToTrigger != null)
+                    if (descriptor.MapName != mapDescriptor.MapName)
                     {
-                        CreateQuestText("{\"TriggeredBy\": \"" + objectName + "\"}", objectTrigger.ObjectToTrigger);
+                        Object.DestroyImmediate(descriptor.gameObject);
                     }
-                    ObjectTriggerJSON triggerJSON = new ObjectTriggerJSON();
-                    triggerJSON.ObjectTriggerName = objectName;
-                    triggerJSON.OnlyTriggerOnce = objectTrigger.OnlyTriggerOnce;
-                    triggerJSON.DisableObject = objectTrigger.DisableObject;
-
-                    CreateQuestText(JsonUtility.ToJson(triggerJSON), objectTrigger.gameObject);
-                    Object.DestroyImmediate(objectTrigger);
-                    triggerCount++;
-                }
-            }
-
-            int teleporterCount = 1;
-            foreach (Teleporter teleporter in gameObject.GetComponentsInChildren<Teleporter>(true))
-            {
-                if (teleporter != null && teleporter.gameObject != null)
-                {
-                    string teleporterName = "Teleporter" + teleporterCount;
-                    foreach (Transform teleportPoint in teleporter.TeleportPoints)
+                    else
                     {
-                        if (teleportPoint != null && teleportPoint.gameObject != null)
-                        {
-                            CreateQuestText("{\"TeleportPoint\": \"" + teleporterName + "\"}", teleportPoint.gameObject);
-                        }
-                    }
-                    teleporter.TeleportPoints = null;
-                    string teleporterJSON = JsonUtility.ToJson(teleporter);
-                    teleporterJSON = teleporterJSON.Replace("\"TeleportPoints\":[],", "\"TeleporterName\": \"" + teleporterName + "\",");
-
-                    CreateQuestText(teleporterJSON, teleporter.gameObject);
-                    Object.DestroyImmediate(teleporter);
-                    teleporterCount++;
-                }
-            }
-
-            RoundEndActions roundEndActions = gameObject.GetComponentInChildren<RoundEndActions>(true);
-            if (roundEndActions != null && roundEndActions.gameObject != null)
-            {
-                foreach (GameObject roundEndActionObject in roundEndActions.ObjectsToEnable)
-                {
-                    if (roundEndActionObject != null)
-                    {
-                        CreateQuestText("{\"RoundEndAction\": \"Enable\"}", roundEndActionObject);
+                        mapDescriptor = descriptor;
+                        gameObject = descriptor.gameObject;
+                        Selection.activeObject = gameObject;
                     }
                 }
-                foreach (GameObject roundEndActionObject in roundEndActions.ObjectsToDisable)
+
+                StripPrefabsForQuest(gameObject);
+
+                Object.DestroyImmediate(mapDescriptor);
+
+                // Do it again for Android
+                EditorSceneManager.SaveScene(gameObject.scene);
+                // PrefabUtility.SaveAsPrefabAsset(Selection.activeObject as GameObject, $"Assets/_{typeName}.prefab"); // are these next 2 lines necessary? idk. probably test it.
+                assetBundleBuild.assetNames = new string[] { assetBundleScenePath };
+                assetBundleBuild.assetBundleName = androidFileName;
+                BuildPipeline.BuildAssetBundles(Application.temporaryCachePath, new AssetBundleBuild[] { assetBundleBuild }, 0, BuildTarget.Android);
+
+                EditorPrefs.SetString("currentBuildingAssetBundlePath", folderPath);
+
+                // JSON stuff
+                packageJSON.androidFileName = androidFileName;
+                packageJSON.pcFileName = pcFileName;
+                packageJSON.descriptor.pcRequiredVersion = pcRequiredVersion.ToString();
+                packageJSON.descriptor.androidRequiredVersion = androidRequiredVersion.ToString();
+                string json = JsonUtility.ToJson(packageJSON, true);
+                File.WriteAllText(Application.temporaryCachePath + "/package.json", json);
+                // AssetDatabase.DeleteAsset($"Assets/_{typeName}.prefab");
+
+                // Delete the zip if it already exists and re-zip
+                List<string> files = new List<string> {
+                    Application.temporaryCachePath + "/" + pcFileName,
+                    Application.temporaryCachePath + "/" + androidFileName,
+                    Application.temporaryCachePath + "/package.json",
+                    Application.temporaryCachePath + "/preview.png",
+                    Application.temporaryCachePath + "/preview_cubemap.png"
+                };
+
+                if (File.Exists(Application.temporaryCachePath + "/tempZip.zip")) File.Delete(Application.temporaryCachePath + "/tempZip.zip");
+
+                CreateZipFile(Application.temporaryCachePath + "/tempZip.zip", files);
+
+                // After zipping, clear some assets from the temp folder
+                if (File.Exists(path))
                 {
-                    if (roundEndActionObject != null)
-                    {
-                        CreateQuestText("{\"RoundEndAction\": \"Disable\"}", roundEndActionObject);
-                    }
+                    File.Delete(path);
                 }
-                RoundEndActionsJSON actionsJSON = new RoundEndActionsJSON();
-                actionsJSON.RoundEndActions = true;
-                actionsJSON.RespawnOnRoundEnd = roundEndActions.RespawnOnRoundEnd;
+                foreach (string file in files) if (File.Exists(file)) File.Delete(file);
 
-                CreateQuestText(JsonUtility.ToJson(actionsJSON), roundEndActions.gameObject);
-                Object.DestroyImmediate(roundEndActions);
+                // Move the ZIP and finalize
+                File.Move(Application.temporaryCachePath + "/tempZip.zip", path);
+                //Object.DestroyImmediate(gameObject);
+                AssetDatabase.Refresh();
+
+                // Open scene again
+                EditorSceneManager.OpenScene(oldScenePath);
+
+                // Re-enable scene checking
+                SceneChecker.disabled = false;
+                exporting = false;
+
+                EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
+                EditorUtility.RevealInFinder(path);
             }
-
-            Object.DestroyImmediate(mapDescriptor);
-
-            // Do it again for Android
-            EditorSceneManager.SaveScene(gameObject.scene);
-            // PrefabUtility.SaveAsPrefabAsset(Selection.activeObject as GameObject, $"Assets/_{typeName}.prefab"); // are these next 2 lines necessary? idk. probably test it.
-            assetBundleBuild.assetNames = new string[] { assetBundleScenePath };
-            assetBundleBuild.assetBundleName = androidFileName;
-            BuildPipeline.BuildAssetBundles(Application.temporaryCachePath, new AssetBundleBuild[] { assetBundleBuild }, 0, BuildTarget.Android);
-
-            EditorPrefs.SetString("currentBuildingAssetBundlePath", folderPath);
-
-            // JSON stuff
-            packageJSON.androidFileName = androidFileName;
-            packageJSON.pcFileName = pcFileName;
-            packageJSON.descriptor.pcRequiredVersion = pcRequiredVersion.ToString();
-            packageJSON.descriptor.androidRequiredVersion = androidRequiredVersion.ToString();
-            string json = JsonUtility.ToJson(packageJSON, true);
-            File.WriteAllText(Application.temporaryCachePath + "/package.json", json);
-            // AssetDatabase.DeleteAsset($"Assets/_{typeName}.prefab");
-
-            // Delete the zip if it already exists and re-zip
-            List<string> files = new List<string> {
-            Application.temporaryCachePath + "/" + pcFileName,
-            Application.temporaryCachePath + "/" + androidFileName,
-            Application.temporaryCachePath + "/package.json",
-            Application.temporaryCachePath + "/preview.png",
-            Application.temporaryCachePath + "/preview_cubemap.png"
-        };
-
-            if (File.Exists(Application.temporaryCachePath + "/tempZip.zip")) File.Delete(Application.temporaryCachePath + "/tempZip.zip");
-
-            CreateZipFile(Application.temporaryCachePath + "/tempZip.zip", files);
-
-            // After zipping, clear some assets from the temp folder
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-            foreach (string file in files) if (File.Exists(file)) File.Delete(file);
-
-            // Move the ZIP and finalize
-            File.Move(Application.temporaryCachePath + "/tempZip.zip", path);
-            //Object.DestroyImmediate(gameObject);
-            AssetDatabase.Refresh();
-
-            // Open scene again
-            EditorSceneManager.OpenScene(oldScenePath);
-
-            // Re-enable scene checking
-            SceneChecker.disabled = false;
         }
         catch(System.Exception e)
         {
+            exporting = false;
             SceneChecker.disabled = false;
             Debug.Log("Something went wrong... let's load the old scene.");
+            EditorUtility.DisplayDialog("Error!", e.Message, "OK");
             if (oldScenePath != null)
             {
                 EditorSceneManager.OpenScene(oldScenePath);
             }
             else throw new System.Exception("Something went wrong and you don't have your work saved in a scene! PLEASE save your work in a scene before trying to export.");
             throw e;
+        }
+    }
+
+    public static void StripPrefabsForQuest(GameObject gameObject)
+    {
+
+        foreach (TagZone zone in gameObject.GetComponentsInChildren<TagZone>(true))
+        {
+            if (zone != null && zone.gameObject != null)
+            {
+                CreateQuestText("{\"TagZone\": true}", zone.gameObject);
+                Object.DestroyImmediate(zone);
+            }
+        }
+
+        foreach (SurfaceClimbSettings surfaceClimbSettings in gameObject.GetComponentsInChildren<SurfaceClimbSettings>(true))
+        {
+            if (surfaceClimbSettings != null && surfaceClimbSettings.gameObject != null)
+            {
+                SurfaceClimbSettingsJSON settingsJson = new SurfaceClimbSettingsJSON();
+                settingsJson.Unclimbable = surfaceClimbSettings.Unclimbable;
+                settingsJson.slipPercentage = surfaceClimbSettings.slipPercentage;
+
+                CreateQuestText(JsonUtility.ToJson(settingsJson), surfaceClimbSettings.gameObject);
+                Object.DestroyImmediate(surfaceClimbSettings);
+            }
+        }
+
+        int triggerCount = 1;
+        foreach (ObjectTrigger objectTrigger in gameObject.GetComponentsInChildren<ObjectTrigger>(true))
+        {
+            if (objectTrigger != null && objectTrigger.gameObject != null)
+            {
+                string objectName = "ObjectTrigger" + triggerCount;
+                if (objectTrigger.ObjectToTrigger != null)
+                {
+                    CreateQuestText("{\"TriggeredBy\": \"" + objectName + "\"}", objectTrigger.ObjectToTrigger);
+                }
+                ObjectTriggerJSON triggerJSON = new ObjectTriggerJSON();
+                triggerJSON.ObjectTriggerName = objectName;
+                triggerJSON.OnlyTriggerOnce = objectTrigger.OnlyTriggerOnce;
+                triggerJSON.DisableObject = objectTrigger.DisableObject;
+
+                CreateQuestText(JsonUtility.ToJson(triggerJSON), objectTrigger.gameObject);
+                Object.DestroyImmediate(objectTrigger);
+                triggerCount++;
+            }
+        }
+
+        int teleporterCount = 1;
+        foreach (Teleporter teleporter in gameObject.GetComponentsInChildren<Teleporter>(true))
+        {
+            if (teleporter != null && teleporter.gameObject != null)
+            {
+                string teleporterName = "Teleporter" + teleporterCount;
+                foreach (Transform teleportPoint in teleporter.TeleportPoints)
+                {
+                    if (teleportPoint != null && teleportPoint.gameObject != null)
+                    {
+                        CreateQuestText("{\"TeleportPoint\": \"" + teleporterName + "\"}", teleportPoint.gameObject);
+                    }
+                }
+                teleporter.TeleportPoints = null;
+                string teleporterJSON = JsonUtility.ToJson(teleporter);
+                teleporterJSON = teleporterJSON.Replace("\"TeleportPoints\":[],", "\"TeleporterName\": \"" + teleporterName + "\",");
+
+                CreateQuestText(teleporterJSON, teleporter.gameObject);
+                Object.DestroyImmediate(teleporter);
+                teleporterCount++;
+            }
+        }
+
+        RoundEndActions roundEndActions = gameObject.GetComponentInChildren<RoundEndActions>(true);
+        if (roundEndActions != null && roundEndActions.gameObject != null)
+        {
+            foreach (GameObject roundEndActionObject in roundEndActions.ObjectsToEnable)
+            {
+                if (roundEndActionObject != null)
+                {
+                    CreateQuestText("{\"RoundEndAction\": \"Enable\"}", roundEndActionObject);
+                }
+            }
+            foreach (GameObject roundEndActionObject in roundEndActions.ObjectsToDisable)
+            {
+                if (roundEndActionObject != null)
+                {
+                    CreateQuestText("{\"RoundEndAction\": \"Disable\"}", roundEndActionObject);
+                }
+            }
+            RoundEndActionsJSON actionsJSON = new RoundEndActionsJSON();
+            actionsJSON.RoundEndActions = true;
+            actionsJSON.RespawnOnRoundEnd = roundEndActions.RespawnOnRoundEnd;
+
+            CreateQuestText(JsonUtility.ToJson(actionsJSON), roundEndActions.gameObject);
+            Object.DestroyImmediate(roundEndActions);
         }
     }
 

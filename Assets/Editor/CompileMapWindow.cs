@@ -68,20 +68,7 @@ public class CompileMapWindow : EditorWindow
                         if (path != "")
                         {
                             EditorUtility.SetDirty(note);
-
-                            // noteObject = Instantiate(noteObject);
-                            // do stuff 
-                            try
-                            {
-                                ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(note));
-                                EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
-                                EditorUtility.RevealInFinder(path);
-                            }
-                            catch(System.Exception e)
-                            {
-                                EditorUtility.DisplayDialog("Error!", e.Message, "OK");
-                                DestroyImmediate(noteObject);
-                            }
+                            ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(note));
                         }
                     }
                     else
