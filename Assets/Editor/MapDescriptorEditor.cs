@@ -66,7 +66,7 @@ public class MapDescriptorEditor : Editor
             GUILayout.EndHorizontal();
 
         }
-
+        
         mapSettingsOpened = EditorGUILayout.Foldout(mapSettingsOpened, "Map Settings");
         if (mapSettingsOpened)
         {
@@ -76,7 +76,6 @@ public class MapDescriptorEditor : Editor
             DrawPropertiesExcluding(serializedObject, "MapName", "AuthorName", "Description", "m_Script", "GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier");
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
-
         }
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
@@ -251,6 +250,7 @@ public class MapDescriptorEditor : Editor
             {
                 spawnPoints.Add(renderer.transform);
             }
+
         }
 
         return spawnPoints;
