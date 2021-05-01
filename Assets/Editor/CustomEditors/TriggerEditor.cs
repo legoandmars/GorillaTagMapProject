@@ -31,9 +31,12 @@ public class TriggerEditor : Editor
             trigger.OnlyTriggerOnce = EditorGUILayout.Toggle("Only Trigger Once", trigger.OnlyTriggerOnce);
 
             trigger.ObjectToTrigger = EditorGUILayout.ObjectField("Object to Trigger", trigger.ObjectToTrigger, typeof(GameObject), true) as GameObject;
-            if (trigger.ObjectToTrigger.scene != trigger.gameObject.scene)
+            if (trigger.ObjectToTrigger != null)
             {
-                GUILayout.Label("Your Triggered Object is not in the same scene as your trigger!", EditorStyles.boldLabel);
+                if (trigger.ObjectToTrigger.scene != trigger.gameObject.scene)
+                {
+                    GUILayout.Label("Your Triggered Object is not in the same scene as your trigger!", EditorStyles.boldLabel);
+                }
             }
             trigger.TouchType = (VmodMonkeMapLoader.Behaviours.GorillaTouchType)EditorGUILayout.EnumPopup("TouchType", trigger.TouchType);
 
