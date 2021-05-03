@@ -66,7 +66,7 @@ public class MapDescriptorEditor : Editor
             GUILayout.EndHorizontal();
 
         }
-
+        
         mapSettingsOpened = EditorGUILayout.Foldout(mapSettingsOpened, "Map Settings");
         if (mapSettingsOpened)
         {
@@ -76,7 +76,6 @@ public class MapDescriptorEditor : Editor
             DrawPropertiesExcluding(serializedObject, "MapName", "AuthorName", "Description", "m_Script", "GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier");
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
-
         }
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
@@ -126,5 +125,134 @@ public class MapDescriptorEditor : Editor
         {
             // serialized object doesn't exist. sometimes this happens when switching scenes.
         }
+    }
+
+    public void OnSceneGUI()
+    {
+        VmodMonkeMapLoader.Behaviours.MapDescriptor targetDescriptor = (VmodMonkeMapLoader.Behaviours.MapDescriptor)target;
+        GameObject gameObject = targetDescriptor.gameObject;
+
+        Handles.BeginGUI();
+        GUILayout.BeginVertical(MapDescriptorConfig.textStyle, GUILayout.Width(MapDescriptorConfig.guiWidth));
+
+        GUILayout.Label(targetDescriptor.MapName, EditorStyles.boldLabel);
+
+        MapDescriptorConfig.DisplayTeleporters = GUILayout.Toggle(MapDescriptorConfig.DisplayTeleporters, "Display Teleporters");
+        MapDescriptorConfig.DisplaySpawnPoints = GUILayout.Toggle(MapDescriptorConfig.DisplaySpawnPoints, "Display Spawn Points");
+        MapDescriptorConfig.DisplayTagZones = GUILayout.Toggle(MapDescriptorConfig.DisplayTagZones, "Display Tag Zones");
+        MapDescriptorConfig.DisplayObjectTriggers = GUILayout.Toggle(MapDescriptorConfig.DisplayObjectTriggers, "Display Object Triggers");
+        MapDescriptorConfig.DisplaySurfaceSettings = GUILayout.Toggle(MapDescriptorConfig.DisplaySurfaceSettings, "Display Surface Settings");
+        MapDescriptorConfig.DisplayRoundEndActions = GUILayout.Toggle(MapDescriptorConfig.DisplayRoundEndActions, "Display Round End Action Objects");
+
+        GUILayout.Space(5.0f);
+        MapDescriptorConfig.DisplayNames = GUILayout.Toggle(MapDescriptorConfig.DisplayNames, "Display Object Names");
+
+        GUILayout.EndVertical();
+        Handles.EndGUI();
+
+        if (MapDescriptorConfig.DisplaySpawnPoints)
+        {
+            targetDescriptor.SpawnPoints = GetAllSpawnPoints(gameObject).ToArray();
+            foreach (var point in targetDescriptor.SpawnPoints)
+            {
+                DrawSpawnPoint(point);
+            }
+        }
+
+        if (MapDescriptorConfig.DisplayTeleporters)
+        {
+            foreach (var tele in gameObject.GetComponentsInChildren<VmodMonkeMapLoader.Behaviours.Teleporter>(true))
+            {
+                TeleporterEditor.DrawTeleport(tele);
+            }
+        }
+
+        if (MapDescriptorConfig.DisplayTagZones)
+        {
+            foreach (var zone in gameObject.GetComponentsInChildren<VmodMonkeMapLoader.Behaviours.TagZone>(true))
+            {
+                TagZoneEditor.DrawTagZone(zone);
+            }
+        }
+
+        if (MapDescriptorConfig.DisplayObjectTriggers)
+        {
+            foreach (var trigger in gameObject.GetComponentsInChildren<VmodMonkeMapLoader.Behaviours.ObjectTrigger>(true))
+            {
+                TriggerEditor.DrawTrigger(trigger);
+            }
+        }
+
+        if (MapDescriptorConfig.DisplaySurfaceSettings)
+        {
+            foreach (var surface in gameObject.GetComponentsInChildren<VmodMonkeMapLoader.Behaviours.SurfaceClimbSettings>(true))
+            {
+                SurfaceClimbSettingsEditor.DrawSurface(surface);
+            }
+        }
+
+        if (MapDescriptorConfig.DisplayRoundEndActions)
+        {
+            foreach (var roundEndActions in gameObject.GetComponentsInChildren<VmodMonkeMapLoader.Behaviours.RoundEndActions>(true))
+            {
+                RoundEndActionsEditor.DrawRoundEnd(roundEndActions);
+            }
+        }
+    }
+
+    public static void DrawSpawnPoint(Transform point)
+    {
+        Handles.color = Color.magenta;
+
+        if (Handles.Button(point.position, point.rotation, 1.0f, 1.0f, Handles.CubeHandleCap))
+        {
+            moveTo(point);
+        }
+
+        HandleHelpers.Label(point.position + Vector3.up * point.lossyScale.y, new GUIContent(point.gameObject.name));
+    }
+
+    public static void moveTo(Transform point)
+    {
+        SceneView.lastActiveSceneView.pivot = point.position;
+        SceneView.lastActiveSceneView.rotation = Quaternion.LookRotation((point.position - SceneView.lastActiveSceneView.camera.transform.position).normalized * .5f);
+        Selection.activeGameObject = point.gameObject;
+
+    }
+
+    public static List<Transform> GetAllSpawnPoints(GameObject root)
+    {
+        List<Transform> spawnPoints = new List<Transform>();
+
+        var descriptor = root.GetComponent<VmodMonkeMapLoader.Behaviours.MapDescriptor>();
+        if (descriptor != null)
+        {
+            foreach (var t in descriptor.SpawnPoints)
+            {
+                spawnPoints.Add(t);
+            }
+        }
+
+        foreach (var renderer in root.GetComponentsInChildren<Renderer>())
+        {
+            if (spawnPoints.Contains(renderer.transform)) continue;
+            bool foundMat = false;
+            foreach (var mat in renderer.sharedMaterials)
+            {
+                if (mat.name == "Spawn Point")
+                {
+                    foundMat = true;
+                    break;
+                }
+            }
+
+            if (foundMat)
+            {
+                spawnPoints.Add(renderer.transform);
+            }
+
+        }
+
+        return spawnPoints;
     }
 }
