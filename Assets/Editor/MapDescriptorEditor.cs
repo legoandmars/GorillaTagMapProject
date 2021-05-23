@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using VmodMonkeMapLoader.Helpers;
 
 [CustomEditor(typeof(VmodMonkeMapLoader.Behaviours.MapDescriptor))]
 public class MapDescriptorEditor : Editor
@@ -11,6 +12,9 @@ public class MapDescriptorEditor : Editor
 
     bool playerSettingsOpened = true;
     bool mapSettingsOpened = true;
+
+    SerializedProperty gameModeProperty;
+    int gameMode = 0;
 
     void GeneratePreview()
     {
@@ -43,13 +47,22 @@ public class MapDescriptorEditor : Editor
         }
     }
 
+    void OnEnable()
+	{
+        gameModeProperty = serializedObject.FindProperty("GameMode");
+        if (gameModeProperty.stringValue.ToLower() == "casual")
+		{
+            gameMode = 1;
+		}
+	}
+
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
         VmodMonkeMapLoader.Behaviours.MapDescriptor targetDescriptor = (VmodMonkeMapLoader.Behaviours.MapDescriptor)target;
 
         GUILayout.BeginVertical();
-        DrawPropertiesExcluding(serializedObject, "GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier", "SpawnPoints", "CustomSkybox", "ExportLighting", "m_Script");
+        DrawPropertiesExcluding(serializedObject, "GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier", "SpawnPoints", "CustomSkybox", "ExportLighting", "m_Script", "GameMode");
         // Don't like these hardcoded values. Maybe find a more automatic solution
         // DrawDefaultInspector();
 
@@ -61,10 +74,17 @@ public class MapDescriptorEditor : Editor
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.BeginVertical(GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.9f));
-            DrawPropertiesExcluding(serializedObject, "MapName", "AuthorName", "Description", "SpawnPoints", "CustomSkybox", "ExportLighting", "m_Script");
+            DrawPropertiesExcluding(serializedObject, "MapName", "AuthorName", "Description", "SpawnPoints", "CustomSkybox", "ExportLighting", "m_Script", "GameMode");
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
-
+            if (GUILayout.Button("Reset Properties"))
+			{
+                serializedObject.FindProperty("GravitySpeed").floatValue = SharedConstants.Gravity;
+                serializedObject.FindProperty("SlowJumpLimit").floatValue = SharedConstants.SlowJumpLimit;
+				serializedObject.FindProperty("FastJumpLimit").floatValue = SharedConstants.FastJumpLimit;
+				serializedObject.FindProperty("SlowJumpMultiplier").floatValue = SharedConstants.SlowJumpMultiplier;
+			    serializedObject.FindProperty("FastJumpMultiplier").floatValue = SharedConstants.FastJumpMultiplier;
+			}
         }
 
         mapSettingsOpened = EditorGUILayout.Foldout(mapSettingsOpened, "Map Settings");
@@ -73,7 +93,10 @@ public class MapDescriptorEditor : Editor
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.BeginVertical(GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.9f));
-            DrawPropertiesExcluding(serializedObject, "MapName", "AuthorName", "Description", "m_Script", "GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier");
+            DrawPropertiesExcluding(serializedObject, "MapName", "AuthorName", "Description", "m_Script", "GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier", "GameMode");
+            gameMode = EditorGUILayout.Popup("Game Mode", gameMode, new string[] { "Default", "Casual" });
+            gameModeProperty.stringValue = new string[] { "", "casual" }[gameMode]; 
+
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
@@ -83,7 +106,7 @@ public class MapDescriptorEditor : Editor
 
         GUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Thumbnail Preview");
-        GUILayout.Button("Refresh Preview");
+        if(GUILayout.Button("Refresh Preview")) GeneratePreview();
         GUILayout.EndHorizontal();
         GUILayout.Space(10);
 

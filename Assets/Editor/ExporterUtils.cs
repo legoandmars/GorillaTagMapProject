@@ -8,6 +8,7 @@ using UnityEditor.SceneManagement;
 using System.IO;
 using System.IO.Compression;
 using VmodMonkeMapLoader.Behaviours;
+using VmodMonkeMapLoader.Helpers;
 
 public static class ExporterUtils
 {
@@ -48,6 +49,7 @@ public static class ExporterUtils
         packageJSON.config.slowJumpMultiplier = mapDescriptor.SlowJumpMultiplier;
         packageJSON.config.fastJumpLimit = mapDescriptor.FastJumpLimit;
         packageJSON.config.fastJumpMultiplier = mapDescriptor.FastJumpMultiplier;
+        packageJSON.config.gameMode = mapDescriptor.GameMode;
         // do config stuff here
         return packageJSON;
     }
@@ -574,9 +576,12 @@ public static class ExporterUtils
 	{
         System.Version requiredVersion = new System.Version("1.0.0");
         System.Version v110 = new System.Version("1.1.0");
-        if (mapDescriptor.SlowJumpLimit != 6.5f || mapDescriptor.SlowJumpMultiplier != 1.1f || mapDescriptor.FastJumpLimit != 8.5f || mapDescriptor.FastJumpMultiplier != 1.3f)
+        if (mapDescriptor.SlowJumpLimit != SharedConstants.SlowJumpLimit
+            || mapDescriptor.SlowJumpMultiplier != SharedConstants.SlowJumpMultiplier
+            || mapDescriptor.FastJumpLimit != SharedConstants.FastJumpLimit
+            || mapDescriptor.FastJumpMultiplier != SharedConstants.FastJumpMultiplier
+            || (mapDescriptor.GameMode != "" && mapDescriptor.GameMode.ToLower() != "default" ) )
 		{
-            Debug.Log($"{mapDescriptor.SlowJumpLimit}, {mapDescriptor.SlowJumpMultiplier}, {mapDescriptor.FastJumpLimit}, {mapDescriptor.FastJumpMultiplier}");
             requiredVersion = MaxVersion(requiredVersion, v110);
 		}
         return requiredVersion;
@@ -586,7 +591,11 @@ public static class ExporterUtils
 	{
         System.Version requiredVersion = new System.Version("1.0.0");
         System.Version v110 = new System.Version("1.1.0");
-        if (mapDescriptor.SlowJumpLimit != 6.5f || mapDescriptor.SlowJumpMultiplier != 1.1f || mapDescriptor.FastJumpLimit != 8.5f || mapDescriptor.FastJumpMultiplier != 1.3f)
+        if (mapDescriptor.SlowJumpLimit != SharedConstants.SlowJumpLimit
+            || mapDescriptor.SlowJumpMultiplier != SharedConstants.SlowJumpMultiplier
+            || mapDescriptor.FastJumpLimit != SharedConstants.FastJumpLimit
+            || mapDescriptor.FastJumpMultiplier != SharedConstants.FastJumpMultiplier
+            || (mapDescriptor.GameMode != "" && mapDescriptor.GameMode.ToLower() != "default" ) )
 		{
             requiredVersion = MaxVersion(requiredVersion, v110);
 		}

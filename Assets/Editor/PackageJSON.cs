@@ -1,4 +1,6 @@
-﻿[System.Serializable]
+﻿using VmodMonkeMapLoader.Helpers;
+
+[System.Serializable]
 public class PackageJSON
 {
     public string androidFileName;
@@ -24,11 +26,12 @@ public class Config
     public string cubemapImagePath;
     public string[] spawnPoints;
     public UnityEngine.Color mapColor;
-    public float gravity = -9.8f;
-    public float slowJumpLimit = 6.5f;
-    public float fastJumpLimit = 8.5f;
-    public float slowJumpMultiplier = 1.1f;
-    public float fastJumpMultiplier = 1.3f;
+    public float gravity = SharedConstants.Gravity;
+    public float slowJumpLimit = SharedConstants.SlowJumpLimit;
+    public float fastJumpLimit = SharedConstants.FastJumpLimit;
+    public float slowJumpMultiplier = SharedConstants.SlowJumpMultiplier;
+    public float fastJumpMultiplier = SharedConstants.FastJumpMultiplier;
+    public string gameMode = "";
 }
 
 [System.Serializable]
