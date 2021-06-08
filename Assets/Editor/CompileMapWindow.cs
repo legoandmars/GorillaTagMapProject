@@ -68,27 +68,7 @@ public class CompileMapWindow : EditorWindow
                         if (path != "")
                         {
                             EditorUtility.SetDirty(note);
-
-                            if(noteObject.transform.Find("ThumbnailCamera") != null)
-                            {
-                                // noteObject = Instantiate(noteObject);
-                                // do stuff 
-                                try
-                                {
-                                    ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(note));
-                                    EditorUtility.DisplayDialog("Exportation Successful!", "Exportation Successful!", "OK");
-                                    EditorUtility.RevealInFinder(path);
-                                }
-                                catch(System.Exception e)
-                                {
-                                    EditorUtility.DisplayDialog("Error!", e.Message, "OK");
-                                    DestroyImmediate(noteObject);
-                                }
-                            }
-                            else
-                            {
-                                EditorUtility.DisplayDialog("Exportation Failed!", "No thumbnail camera.", "OK");
-                            }
+                            ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(note));
                         }
                     }
                     else
