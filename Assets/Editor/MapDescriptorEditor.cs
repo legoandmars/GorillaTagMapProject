@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
 using VmodMonkeMapLoader.Helpers;
@@ -15,6 +16,8 @@ public class MapDescriptorEditor : Editor
 
     SerializedProperty gameModeProperty;
     int gameMode = 0;
+
+    string[] allProperties;
 
     void GeneratePreview()
     {
@@ -54,6 +57,12 @@ public class MapDescriptorEditor : Editor
 		{
             gameMode = 1;
 		}
+        allProperties = typeof(VmodMonkeMapLoader.Behaviours.MapDescriptor).GetFields().Select(x => x.Name).Append("m_Script").ToArray();
+	}
+
+    void DrawProperties(params string[] properties)
+	{
+        DrawPropertiesExcluding(serializedObject, allProperties.Except(properties).ToArray());
 	}
 
     public override void OnInspectorGUI()
@@ -62,9 +71,8 @@ public class MapDescriptorEditor : Editor
         VmodMonkeMapLoader.Behaviours.MapDescriptor targetDescriptor = (VmodMonkeMapLoader.Behaviours.MapDescriptor)target;
 
         GUILayout.BeginVertical();
-        DrawPropertiesExcluding(serializedObject, "GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier", "SpawnPoints", "CustomSkybox", "ExportLighting", "m_Script", "GameMode");
-        // Don't like these hardcoded values. Maybe find a more automatic solution
-        // DrawDefaultInspector();
+
+        DrawProperties("MapName", "AuthorName", "Description");
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
@@ -74,7 +82,7 @@ public class MapDescriptorEditor : Editor
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.BeginVertical(GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.9f));
-            DrawPropertiesExcluding(serializedObject, "MapName", "AuthorName", "Description", "SpawnPoints", "CustomSkybox", "ExportLighting", "m_Script", "GameMode");
+            DrawProperties("GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier");
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             if (GUILayout.Button("Reset Properties"))
@@ -93,7 +101,7 @@ public class MapDescriptorEditor : Editor
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.BeginVertical(GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.9f));
-            DrawPropertiesExcluding(serializedObject, "MapName", "AuthorName", "Description", "m_Script", "GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier", "GameMode");
+            DrawProperties("SpawnPoints", "CustomSkybox", "ExportLighting");
             gameMode = EditorGUILayout.Popup("Game Mode", gameMode, new string[] { "Default", "Casual" });
             gameModeProperty.stringValue = new string[] { "", "casual" }[gameMode]; 
 
@@ -137,7 +145,7 @@ public class MapDescriptorEditor : Editor
             {
                 EditorUtility.SetDirty(targetDescriptor);
 
-                ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(targetDescriptor));
+                ExporterUtils.ExportPackage(noteObject, path, "Map");
             }
         }
 

@@ -38,8 +38,6 @@ public static class ExporterUtils
     public static PackageJSON MapDescriptorToJSON(MapDescriptor mapDescriptor)
     {
         PackageJSON packageJSON = new PackageJSON();
-        packageJSON.descriptor = new Descriptor();
-        packageJSON.config = new Config();
         packageJSON.descriptor.author = mapDescriptor.AuthorName;
         packageJSON.descriptor.objectName = mapDescriptor.MapName;
         packageJSON.descriptor.description = mapDescriptor.Description;
@@ -50,12 +48,13 @@ public static class ExporterUtils
         packageJSON.config.fastJumpLimit = mapDescriptor.FastJumpLimit;
         packageJSON.config.fastJumpMultiplier = mapDescriptor.FastJumpMultiplier;
         packageJSON.config.gameMode = mapDescriptor.GameMode;
+        packageJSON.config.customDataKeys = mapDescriptor.CustomDataKeys;
+        packageJSON.config.customDataValues = mapDescriptor.CustomDataValues;
         // do config stuff here
         return packageJSON;
     }
 
-
-    public static void ExportPackage(GameObject gameObject, string path, string typeName, PackageJSON packageJSON)
+    public static void ExportPackage(GameObject gameObject, string path, string typeName)
     {
         if (exporting) return;
         string fileName = Path.GetFileName(path);
@@ -75,10 +74,6 @@ public static class ExporterUtils
 
             Selection.activeObject = gameObject;
             MapDescriptor mapDescriptor = gameObject.GetComponent<MapDescriptor>();
-
-            // Compute Required Versions
-            System.Version pcRequiredVersion = ComputePcVersion(mapDescriptor);
-            System.Version androidRequiredVersion = ComputeAndroidVersion(mapDescriptor);
 
             if (!mapDescriptor.ExportLighting)
             {
@@ -193,6 +188,20 @@ public static class ExporterUtils
             }
 
             if (mapDescriptor.SpawnPoints.Length == 0) throw new System.Exception("No spawn points found! Add some spawn points to your map.");
+
+            // Run Custom OnBuilds
+            foreach (IBuildEvents component in gameObject.GetComponents<IBuildEvents>())
+			{
+                component.OnBuild(mapDescriptor);
+			}
+
+            // Compute Required Versions
+            System.Version pcRequiredVersion = ComputePcVersion(mapDescriptor);
+            System.Version androidRequiredVersion = ComputeAndroidVersion(mapDescriptor);
+
+			mapDescriptor.CustomDataKeys.AddRange(mapDescriptor.CustomData.Keys);
+            mapDescriptor.CustomDataValues.AddRange(mapDescriptor.CustomData.Values);
+            PackageJSON packageJSON = MapDescriptorToJSON(mapDescriptor);
 
             // Take Screenshots with the thumbnail camera
             Camera thumbnailCamera = GameObject.Find("ThumbnailCamera")?.GetComponent<Camera>();
