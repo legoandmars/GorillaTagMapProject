@@ -7,8 +7,10 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using System.IO;
 using System.IO.Compression;
+using Newtonsoft.Json;
 using VmodMonkeMapLoader.Behaviours;
 using VmodMonkeMapLoader.Helpers;
+using VmodMonkeMapLoader.Models;
 
 public static class ExporterUtils
 {
@@ -35,23 +37,27 @@ public static class ExporterUtils
         }
     }
 
-    public static PackageJSON MapDescriptorToJSON(MapDescriptor mapDescriptor)
+    public static MapPackageInfo MapDescriptorToJSON(MapDescriptor mapDescriptor)
     {
-        PackageJSON packageJSON = new PackageJSON();
-        packageJSON.descriptor.author = mapDescriptor.AuthorName;
-        packageJSON.descriptor.objectName = mapDescriptor.MapName;
-        packageJSON.descriptor.description = mapDescriptor.Description;
-        packageJSON.config.imagePath = null;
-        packageJSON.config.gravity = mapDescriptor.GravitySpeed;
-        packageJSON.config.slowJumpLimit = mapDescriptor.SlowJumpLimit;
-        packageJSON.config.slowJumpMultiplier = mapDescriptor.SlowJumpMultiplier;
-        packageJSON.config.fastJumpLimit = mapDescriptor.FastJumpLimit;
-        packageJSON.config.fastJumpMultiplier = mapDescriptor.FastJumpMultiplier;
-        packageJSON.config.gameMode = mapDescriptor.GameMode;
-        packageJSON.config.customDataKeys = mapDescriptor.CustomDataKeys;
-        packageJSON.config.customDataValues = mapDescriptor.CustomDataValues;
-        // do config stuff here
-        return packageJSON;
+        MapPackageInfo packageInfo = new MapPackageInfo
+        {
+            Config = new MapConfig(),
+            Descriptor = new VmodMonkeMapLoader.Models.Descriptor()
+        };
+
+        packageInfo.Descriptor.Author = mapDescriptor.AuthorName;
+        packageInfo.Descriptor.Name = mapDescriptor.MapName;
+        packageInfo.Descriptor.Description = mapDescriptor.Description;
+
+        packageInfo.Config.ImagePath = null;
+        packageInfo.Config.Gravity = mapDescriptor.GravitySpeed;
+        packageInfo.Config.SlowJumpLimit = mapDescriptor.SlowJumpLimit;
+        packageInfo.Config.SlowJumpMultiplier = mapDescriptor.SlowJumpMultiplier;
+        packageInfo.Config.FastJumpLimit = mapDescriptor.FastJumpLimit;
+        packageInfo.Config.FastJumpMultiplier = mapDescriptor.FastJumpMultiplier;
+        packageInfo.Config.GameMode = mapDescriptor.GameMode;
+        packageInfo.Config.CustomData = mapDescriptor.CustomData;
+        return packageInfo;
     }
 
     public static void ExportPackage(GameObject gameObject, string path, string typeName)
@@ -199,9 +205,7 @@ public static class ExporterUtils
             System.Version pcRequiredVersion = ComputePcVersion(mapDescriptor);
             System.Version androidRequiredVersion = ComputeAndroidVersion(mapDescriptor);
 
-			mapDescriptor.CustomDataKeys.AddRange(mapDescriptor.CustomData.Keys);
-            mapDescriptor.CustomDataValues.AddRange(mapDescriptor.CustomData.Values);
-            PackageJSON packageJSON = MapDescriptorToJSON(mapDescriptor);
+            MapPackageInfo packageJSON = MapDescriptorToJSON(mapDescriptor);
 
             // Take Screenshots with the thumbnail camera
             Camera thumbnailCamera = GameObject.Find("ThumbnailCamera")?.GetComponent<Camera>();
@@ -211,15 +215,15 @@ public static class ExporterUtils
                 Texture2D screenshot = CaptureScreenshot(thumbnailCamera, 512, 512);
                 byte[] screenshotPNG = ImageConversion.EncodeToPNG(screenshot);
                 File.WriteAllBytes(Application.temporaryCachePath + "/preview.png", screenshotPNG);
-                packageJSON.config.imagePath = "preview.png";
+                packageJSON.Config.ImagePath = "preview.png";
 
                 // Cubemap Screenshot
                 Texture2D screenshotCubemap = CaptureCubemap(thumbnailCamera, 1024, 1024);
                 byte[] screenshotCubemapPNG = ImageConversion.EncodeToPNG(screenshotCubemap);
                 File.WriteAllBytes(Application.temporaryCachePath + "/preview_cubemap.png", screenshotCubemapPNG);
-                packageJSON.config.cubemapImagePath = "preview_cubemap.png";
+                packageJSON.Config.CubemapImagePath = "preview_cubemap.png";
 
-                packageJSON.config.mapColor = AverageColor(screenshotCubemap);
+                packageJSON.Config.MapColor = AverageColor(screenshotCubemap);
             }
             else throw new System.Exception("ThumbnailCamera is missing! Make sure to add a ThumbnailCamera to your map.");
             Object.DestroyImmediate(thumbnailCamera.gameObject);
@@ -247,7 +251,7 @@ public static class ExporterUtils
                 mapDescriptor.SpawnPoints[i].gameObject.name = nameString;
                 spawnPointNames.Add(nameString);
             }
-            packageJSON.config.spawnPoints = spawnPointNames.ToArray();
+            packageJSON.Config.SpawnPoints = spawnPointNames.ToArray();
 
 
             // Replace tiling materials with baked versions
@@ -354,11 +358,14 @@ public static class ExporterUtils
                 EditorPrefs.SetString("currentBuildingAssetBundlePath", folderPath);
 
                 // JSON stuff
-                packageJSON.androidFileName = androidFileName;
-                packageJSON.pcFileName = pcFileName;
-                packageJSON.descriptor.pcRequiredVersion = pcRequiredVersion.ToString();
-                packageJSON.descriptor.androidRequiredVersion = androidRequiredVersion.ToString();
-                string json = JsonUtility.ToJson(packageJSON, true);
+                packageJSON.AndroidFileName = androidFileName;
+                packageJSON.PcFileName = pcFileName;
+                packageJSON.Descriptor.PcRequiredVersion = pcRequiredVersion.ToString();
+                packageJSON.Descriptor.AndroidRequiredVersion = androidRequiredVersion.ToString();
+                string json = JsonConvert.SerializeObject(packageJSON, Formatting.Indented, new JsonSerializerSettings() {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    Converters = new List<JsonConverter>() { new ColorConverter() }
+                });
                 File.WriteAllText(Application.temporaryCachePath + "/package.json", json);
                 // AssetDatabase.DeleteAsset($"Assets/_{typeName}.prefab");
 
@@ -584,14 +591,16 @@ public static class ExporterUtils
     public static System.Version ComputePcVersion(MapDescriptor mapDescriptor)
 	{
         System.Version requiredVersion = new System.Version("1.0.0");
-        System.Version v110 = new System.Version("1.1.0");
+        System.Version casualUpdate = new System.Version("1.1.0");
         if (mapDescriptor.SlowJumpLimit != SharedConstants.SlowJumpLimit
             || mapDescriptor.SlowJumpMultiplier != SharedConstants.SlowJumpMultiplier
             || mapDescriptor.FastJumpLimit != SharedConstants.FastJumpLimit
             || mapDescriptor.FastJumpMultiplier != SharedConstants.FastJumpMultiplier
-            || (mapDescriptor.GameMode != "" && mapDescriptor.GameMode.ToLower() != "default" ) )
+            || (mapDescriptor.GameMode != "" && mapDescriptor.GameMode.ToLower() != "default" )
+            || (mapDescriptor.RequiredPCModsId != null & mapDescriptor.RequiredPCModsId.Count > 0)
+            || (mapDescriptor.RequiredQuestModsId != null & mapDescriptor.RequiredQuestModsId.Count > 0) )
 		{
-            requiredVersion = MaxVersion(requiredVersion, v110);
+            requiredVersion = MaxVersion(requiredVersion, casualUpdate);
 		}
         return requiredVersion;
 	}
@@ -599,14 +608,16 @@ public static class ExporterUtils
     public static System.Version ComputeAndroidVersion(MapDescriptor mapDescriptor)
 	{
         System.Version requiredVersion = new System.Version("1.0.0");
-        System.Version v110 = new System.Version("1.1.0");
+        System.Version casualUpdate = new System.Version("1.2.0");
         if (mapDescriptor.SlowJumpLimit != SharedConstants.SlowJumpLimit
             || mapDescriptor.SlowJumpMultiplier != SharedConstants.SlowJumpMultiplier
             || mapDescriptor.FastJumpLimit != SharedConstants.FastJumpLimit
             || mapDescriptor.FastJumpMultiplier != SharedConstants.FastJumpMultiplier
-            || (mapDescriptor.GameMode != "" && mapDescriptor.GameMode.ToLower() != "default" ) )
+            || (mapDescriptor.GameMode != "" && mapDescriptor.GameMode.ToLower() != "default" )
+            || (mapDescriptor.RequiredPCModsId != null & mapDescriptor.RequiredPCModsId.Count > 0)
+            || (mapDescriptor.RequiredQuestModsId != null & mapDescriptor.RequiredQuestModsId.Count > 0) )
 		{
-            requiredVersion = MaxVersion(requiredVersion, v110);
+            requiredVersion = MaxVersion(requiredVersion, casualUpdate);
 		}
         return requiredVersion;
 	}
