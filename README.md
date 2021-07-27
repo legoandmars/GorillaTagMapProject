@@ -25,6 +25,8 @@ This guide is pretty long and in-depth, so make sure to read it thoroughly. If y
     + [Round End Actions](#round-end-actions)
     + [UnclimbableSurface](#unclimbablesurface)
   * [Exporting](#exporting)
+  * [Custom Data](#custom-data)
+    * [For Developers](#for-developers)
 
 ## Setup
 This project is made with Unity version 2019.3.15f. Higher or lower Unity versions may not work properly, so make sure to download it from the [Unity Archive](https://unity3d.com/get-unity/download/archive) if you don't have it already. It's recommended to use Unity Hub to make managing versions easier.
@@ -287,3 +289,37 @@ If your map doesn't look quite right in game, read back over the [Lighting secti
 Once your map is done, join the [Gorilla Tag Modding Discord](https://discord.gg/b2MhDBAzTv) and share it in the beta channels so people can test it out! 
 
 After you've had some other people try it out, feel free to upload it to [Monke Map Hub](https://monkemaphub.com) so more people can download it.
+
+## Custom Data
+
+Some mods build upon the map loader to add extra functionality. Supporting these mods in your map requires you to add their descriptors to your map. If the descriptor is not already in the map project, you may need to import a script from the mod developer into the Scripts folder. Any descriptors you add must be attached to the same gameobject as the Map Descriptor.
+
+### For Developers
+
+In order to add your own descriptor to a map, implement the IBuildEvents interface in your class:
+
+```cs
+using VmodMonkeMapLoader.Behaviours
+
+public class MyModDescriptor : MonoBehaviour, IBuildEvents
+{
+    public void OnBuild(MapDescriptor mapDescriptor) {
+        // Set the gravity speed
+        mapDescriptor.GravitySpeed = 0;
+
+        // Add to the custom data
+        mapDescriptor.CustomData.Add("myKey", "myValue");
+        mapDescriptor.CustomData.Add("myList", [1,2,3]);
+
+        // Require a mod
+        mapDescriptor.RequiredPCModsID.Add("com.me.gorillatag.mypcmod");
+        mapDescriptor.RequiredQuestModsID.Add("com.me.gorillatag.myquestmod");
+	}
+}
+```
+
+Add your own data by adding to `mapDescriptor.CustomData`, which is a Dictionary<string, object>. To require your mod to be installed to load the map, add to `mapDescriptor.RequiredPCModsId` and `mapDescriptor.RequiredQuestModsId` lists. Any property of the descriptor can be modified by your script, though other build events may override these values.
+
+If you make a custom descriptor, feel free to make a pull request to this repository with the descriptor and updated documentation.
+
+Documentation for accessing this data in your mod can be found on the [PC](https://github.com/Vadix88/MonkeMapLoader#for-developers) and [Quest](https://github.com/RedBrumbler/MonkeMapLoader) github pages.
