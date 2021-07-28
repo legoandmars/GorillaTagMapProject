@@ -82,7 +82,10 @@ public class MapDescriptorEditor : Editor
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.BeginVertical(GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.9f));
-            DrawProperties("GravitySpeed", "SlowJumpLimit", "FastJumpLimit", "SlowJumpMultiplier", "FastJumpMultiplier");
+
+            List<string> properties = new List<string> { "GravitySpeed", "SlowJumpLimit", "SlowJumpMultiplier"};
+            if (gameMode != 1) properties.AddRange(new string[]{ "FastJumpLimit", "FastJumpMultiplier" });
+            DrawProperties(properties.ToArray());
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
             if (GUILayout.Button("Reset Properties"))
