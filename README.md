@@ -49,7 +49,7 @@ Create an empty GameObject that will hold everything in your map. Make sure the 
 
 Next, click Add Component and add a Map Descriptor. This will hold some information on your map.
 
-![image](https://user-images.githubusercontent.com/33105645/127243570-87d8e8d8-669a-475b-acb1-f263b7f27b5c.png)
+![Map Descriptor in Unity](https://user-images.githubusercontent.com/33105645/137638265-6e00fe42-7a30-4c6e-936f-a1aa241438f7.png)
 
 Here's what each setting does:
 - Map name
@@ -88,6 +88,10 @@ Here's what each setting does:
 - Export Lighting
     - Whether or not to generate lightmaps for your map
     - Please read the [Lighting Section](#lighting) for more information.
+- Required PC Mods Id
+    - A list of mod ids that the user must have installed to load the map on PC.
+- Required Quest Mods Id
+    - A list of mod ids that the user must have installed to load the map on Quest.
 - Game Mode
     - The game mode that the map will be
     - Default is normal infection, and casual has nobody infected, with tagging disabled. With casual mode selected, all player speeds are set to the slow speeds, and fast speeds are hidden.
