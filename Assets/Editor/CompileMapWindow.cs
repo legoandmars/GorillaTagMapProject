@@ -68,7 +68,7 @@ public class CompileMapWindow : EditorWindow
                         if (path != "")
                         {
                             EditorUtility.SetDirty(note);
-                            ExporterUtils.ExportPackage(noteObject, path, "Map", ExporterUtils.MapDescriptorToJSON(note));
+                            ExporterUtils.ExportPackage(noteObject, path, "Map");
                         }
                     }
                     else
