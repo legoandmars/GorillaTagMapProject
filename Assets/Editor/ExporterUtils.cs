@@ -57,6 +57,9 @@ public static class ExporterUtils
         packageInfo.Config.FastJumpMultiplier = mapDescriptor.FastJumpMultiplier;
         packageInfo.Config.GameMode = mapDescriptor.GameMode;
         packageInfo.Config.CustomData = mapDescriptor.CustomData;
+        packageInfo.Config.RequiredPCModIDs = mapDescriptor.RequiredPCModsId;
+        packageInfo.Config.RequiredQuestModIDs = mapDescriptor.RequiredQuestModsId;
+
         return packageInfo;
     }
 

@@ -8746,6 +8746,9 @@ MonoBehaviour:
   FastJumpLimit: 8.5
   SlowJumpMultiplier: 1.1
   FastJumpMultiplier: 1.3
+  GameMode: 
+  RequiredPCModsId: []
+  RequiredQuestModsId: []
 --- !u!33 &5088129285855299583
 MeshFilter:
   m_ObjectHideFlags: 0

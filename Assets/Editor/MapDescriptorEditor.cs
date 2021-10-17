@@ -104,7 +104,7 @@ public class MapDescriptorEditor : Editor
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.BeginVertical(GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.9f));
-            DrawProperties("SpawnPoints", "CustomSkybox", "ExportLighting");
+            DrawProperties("SpawnPoints", "CustomSkybox", "ExportLighting", "RequiredPCModsId", "RequiredQuestModsId");
             gameMode = EditorGUILayout.Popup("Game Mode", gameMode, new string[] { "Default", "Casual" });
             gameModeProperty.stringValue = new string[] { "", "casual" }[gameMode]; 
 
