@@ -22,6 +22,7 @@ This guide is pretty long and in-depth, so make sure to read it thoroughly. If y
     + [TeleporterTreehouse](#teleportertreehouse)
   * [Other Scripts](#other-scripts)
     + [Surface Climb Settings](#surface-climb-settings)
+    + [Surface Override Indexes](#surface-override-indexes)
     + [Round End Actions](#round-end-actions)
     + [UnclimbableSurface](#unclimbablesurface)
   * [Exporting](#exporting)
@@ -254,6 +255,9 @@ If you want to modify how climbing works on an object, you can add a `Surface Cl
     - A number that decides how "slippery" an object is.
     - Default value is 0.03. Higher values are more slippery, and lower values are less slippery.
     - Don't set this too high or below 0, as it can cause physics weirdness. 
+
+### Surface Override Indexes
+For a long time now, most maps have had an issue where all footsteps are the same as the material you touched before going into a map. This issue can be completely resolved, although painstankingly, by `GorillaSurfaceOverride`. Once adding this to an object you'll see there's an index field. Obviously, the starter number is 0 which is the concrete sound (Forest walls and that). To save you time, there's a file in the ZIP called `INDEXES`. This contains all indexes with the material name, slipperiness value and the index for it (Index only specifies those values. It does not change the textures).
 
 ### Round End Actions
 An optional script that you can place on your Map's GameObject to control how the map behaves on round end.
