@@ -1,299 +1,79 @@
-Name of this mat is: default
- index for this material: 0
- slipperiness for this material: 0
- 
-Name of this mat is: rockwall2
- index for this material: 1
- slipperiness for this material: 0.55
- 
-Name of this mat is: canyon5
- index for this material: 2
- slipperiness for this material: 0.55
- 
-Name of this mat is: pillowwhite
- index for this material: 3
- slipperiness for this material: 0
- 
-Name of this mat is: pillowblue
- index for this material: 4
- slipperiness for this material: 0
- 
-Name of this mat is: pillowyellow
- index for this material: 5
- slipperiness for this material: 0
- 
-Name of this mat is: pillowpink
- index for this material: 6
- slipperiness for this material: 0
- 
-Name of this mat is: pitground
- index for this material: 7
- slipperiness for this material: 0
- 
-Name of this mat is: bark
- index for this material: 8
- slipperiness for this material: 0
- 
-Name of this mat is: loglowres
- index for this material: 9
- slipperiness for this material: 0
- 
-Name of this mat is: table
- index for this material: 10
- slipperiness for this material: 0
- 
-Name of this mat is: darkbrownpanel
- index for this material: 11
- slipperiness for this material: 0
- 
-Name of this mat is: logsupport
- index for this material: 12
- slipperiness for this material: 0
- 
-Name of this mat is: woodensupport
- index for this material: 13
- slipperiness for this material: 0
- 
-Name of this mat is: minewall
- index for this material: 14
- slipperiness for this material: 0
- 
-Name of this mat is: picnictable
- index for this material: 15
- slipperiness for this material: 0
- 
-Name of this mat is: crate
- index for this material: 16
- slipperiness for this material: 0
- 
-Name of this mat is: carttexture
- index for this material: 17
- slipperiness for this material: 0
- 
-Name of this mat is: metalbare
- index for this material: 18
- slipperiness for this material: 0
- 
-Name of this mat is: metalpattern
- index for this material: 19
- slipperiness for this material: 0
- 
-Name of this mat is: crystallrpink
- index for this material: 20
- slipperiness for this material: 0
- 
-Name of this mat is: crystallrpurple
- index for this material: 21
- slipperiness for this material: 0
- 
-Name of this mat is: crystallrteal
- index for this material: 22
- slipperiness for this material: 0
- 
-Name of this mat is: crystallryellow
- index for this material: 23
- slipperiness for this material: 0
- 
-Name of this mat is: bronze
- index for this material: 24
- slipperiness for this material: 0
- 
-Name of this mat is: redpanel
- index for this material: 25
- slipperiness for this material: 0
- 
-Name of this mat is: rusty
- index for this material: 26
- slipperiness for this material: 0
- 
-Name of this mat is: cactus
- index for this material: 27
- slipperiness for this material: 0
- 
-Name of this mat is: Light
- index for this material: 28
- slipperiness for this material: 0
- 
-Name of this mat is: window
- index for this material: 29
- slipperiness for this material: 0
- 
-Name of this mat is: MirrorCenter
- index for this material: 30
- slipperiness for this material: 0
- 
-Name of this mat is: pitgroundfall
- index for this material: 31
- slipperiness for this material: 0
- 
-Name of this mat is: pitgroundwinter
- index for this material: 32
- slipperiness for this material: 0
- 
-Name of this mat is: holidaywhite
- index for this material: 33
- slipperiness for this material: 0
- 
-Name of this mat is: holidaywhiteoff
- index for this material: 34
- slipperiness for this material: 0
- 
-Name of this mat is: holidayred
- index for this material: 35
- slipperiness for this material: 0
- 
-Name of this mat is: holidaygreen
- index for this material: 36
- slipperiness for this material: 0
- 
-Name of this mat is: holidayyellow
- index for this material: 37
- slipperiness for this material: 0
- 
-Name of this mat is: holidayblue
- index for this material: 38
- slipperiness for this material: 0
- 
-Name of this mat is: christmastree
- index for this material: 39
- slipperiness for this material: 0
- 
-Name of this mat is: first2down
- index for this material: 40
- slipperiness for this material: 0
- 
-Name of this mat is: second2down
- index for this material: 41
- slipperiness for this material: 0
- 
-Name of this mat is: third2down
- index for this material: 42
- slipperiness for this material: 0
- 
-Name of this mat is: fifth2down
- index for this material: 43
- slipperiness for this material: 0
- 
-Name of this mat is: sixth2down
- index for this material: 44
- slipperiness for this material: 0
- 
-Name of this mat is: first1down
- index for this material: 45
- slipperiness for this material: 0
- 
-Name of this mat is: second1down
- index for this material: 46
- slipperiness for this material: 0
- 
-Name of this mat is: third1down
- index for this material: 47
- slipperiness for this material: 0
- 
-Name of this mat is: fifth1down
- index for this material: 48
- slipperiness for this material: 0
- 
-Name of this mat is: sixth1down
- index for this material: 49
- slipperiness for this material: 0
- 
-Name of this mat is: first
- index for this material: 50
- slipperiness for this material: 0
- 
-Name of this mat is: second
- index for this material: 51
- slipperiness for this material: 0
- 
-Name of this mat is: third
- index for this material: 52
- slipperiness for this material: 0
- 
-Name of this mat is: fifth
- index for this material: 53
- slipperiness for this material: 0
- 
-Name of this mat is: sixth
- index for this material: 54
- slipperiness for this material: 0
- 
-Name of this mat is: shinyhatlas2
- index for this material: 55
- slipperiness for this material: 0
- 
-Name of this mat is: whee
- index for this material: 56
- slipperiness for this material: 0.95
- 
-Name of this mat is: bronzeslide
- index for this material: 57
- slipperiness for this material: 0.985
- 
-Name of this mat is: metalslide
- index for this material: 58
- slipperiness for this material: 0.75
- 
-Name of this mat is: iceground
- index for this material: 59
- slipperiness for this material: 0.995
- 
-Name of this mat is: purpleplasticinside
- index for this material: 60
- slipperiness for this material: 0.995
- 
-Name of this mat is: mountainice
- index for this material: 61
- slipperiness for this material: 0.995
- 
-Name of this mat is: cosmeticsroomatlasslippery
- index for this material: 62
- slipperiness for this material: 0.995
- 
-Name of this mat is: rockwall3
- index for this material: 63
- slipperiness for this material: 0.995
- 
-Name of this mat is: umbrellaopen
- index for this material: 64
- slipperiness for this material: 0.995
- 
-Name of this mat is: umbrellaclose
- index for this material: 65
- slipperiness for this material: 0
- 
-Name of this mat is: keyboardkey
- index for this material: 66
- slipperiness for this material: 0
- 
-Name of this mat is: buttonpress
- index for this material: 67
- slipperiness for this material: 0
- 
-Name of this mat is: drumGiant
- index for this material: 68
- slipperiness for this material: 0
- 
-Name of this mat is: drumLarge
- index for this material: 69
- slipperiness for this material: 0
- 
-Name of this mat is: drumMedium
- index for this material: 70
- slipperiness for this material: 0
- 
-Name of this mat is: drumSmall
- index for this material: 71
- slipperiness for this material: 0
- 
-Name of this mat is: cymbal
- index for this material: 72
- slipperiness for this material: 0
- 
-Name of this mat is: bongoBig
- index for this material: 73
- slipperiness for this material: 0
- 
-Name of this mat is: bongoSmall
- index for this material: 74
- slipperiness for this material: 0
+index | slide | name                       | audio
+========================================================================
+0     | 0%    | default 		   | none
+1     | 55%   | rockwall2 		   | none
+2     | 55%   | canyon5 		   | none
+3     | 0%    | pillowwhite                | pillowhandtap
+4     | 0%    | pillowblue 		   | pillowhandtap
+5     | 0%    | pillowyellow 		   | pillowhandtap
+6     | 0%    | pillowpink 		   | pillowhandtap
+7     | 0%    | pitground 		   | grassrockhandtap
+8     | 0%    | bark 			   | barkhandtap
+9     | 0%    | loglowres 		   | woodhandtap
+10    | 0%    | table 			   | woodhandtap
+11    | 0%    | darkbrownpanel 		   | woodhandtap
+12    | 0%    | logsupport 		   | woodhandtap
+13    | 0%    | woodensupport 		   | woodhandtap
+14    | 0%    | minewall 		   | dirthandtap
+15    | 0%    | picnictable 		   | woodhandtap
+16    | 0%    | crate 			   | woodhandtap
+17    | 0%    | carttexture 	           | woodhandtap
+18    | 0%    | metalbare                  | metalhandtap
+19    | 0%    | metalpattern               | metalhandtap
+20    | 0%    | crystallrpink              | crystalhandtap
+21    | 0%    | crystallrpurple            | crystalhandtap
+22    | 0%    | crystallrteal              | crystalhandtap
+23    | 0%    | crystallryellow            | crystalhandtap
+24    | 0%    | bronze 		           | metalhandtap
+25    | 0%    | redpanel 	           | woodhandtap
+26    | 0%    | rusty 		           | metalhandtap
+27    | 0%    | cactus 		           | dirthandtap
+28    | 0%    | Light 		           | crystalhandtap
+29    | 0%    | window 		           | crystalhandtap
+30    | 0%    | MirrorCenter 	           | crystalhandtap
+31    | 0%    | pitgroundfall 	           | leafcrunch
+32    | 0%    | pitgroundwinter            | snowstep
+33    | 0%    | holidaywhite 	           | crystalhandtap
+34    | 0%    | holidaywhiteoff            | crystalhandtap
+35    | 0%    | holidayred 	           | crystalhandtap
+36    | 0%    | holidaygreen 	           | crystalhandtap
+37    | 0%    | holidayyellow 	           | crystalhandtap
+38    | 0%    | holidayblue 	           | crystalhandtap
+39    | 0%    | christmastree 	           | dirthandtap
+40    | 0%    | first2down 		   | crystalhandtap_root_2octdown
+41    | 0%    | second2down 	           | crystalhandtap_second_2octdown
+42    | 0%    | third2down 		   | crystalhandtap_third_2octdown
+43    | 0%    | fifth2down 	   	   | crystalhandtap_fifth_2octdown
+44    | 0%    | sixth2down 		   | crystalhandtap_sixth_2octdown
+45    | 0%    | first1down 	           | crystalhandtap_root_1octdown
+46    | 0%    | second1down 	           | crystalhandtap_second_1octdown
+47    | 0%    | third1down 	           | crystalhandtap_third_1octdown
+48    | 0%    | fifth1down 	           | crystalhandtap_fifth_1octdown
+49    | 0%    | sixth1down 	           | crystalhandtap_sixth_1octdown
+50    | 0%    | first 		           | crystalhandtap_root
+51    | 0%    | second 		           | crystalhandtap_root_second
+52    | 0%    | third 		           | crystalhandtap_third
+53    | 0%    | fifth 			   | crystalhandtap_fifth
+54    | 0%    | sixth 			   | crystalhandtap_sixth
+55    | 0%    | shinyhatlas2 		   | crystalhandtap
+56    | 99.5% | whee 		    	   | none
+57    | 99.5% | bronzeslide         	   | metalhandtap
+58    | 99.5% | metalslide          	   | metalhandtap
+59    | 99.5% | iceground 	           | none
+60    | 99.5% | purpleplasticinside        | none
+61    | 99.5% | mountainice                | none
+62    | 99.5% | cosmeticsroomatlasslippery | none
+63    | 99.5% | rockwall		   | none
+64    | 99.5% | umbrellaopen 		   | umbrellaopen
+65    | 0%    | umbrellaclose 	           | umbrellaclose
+66    | 0%    | keyboardkey 		   | keyboardclick
+67    | 0%    | buttonpress 		   | buttonpress
+68    | 0%    | drumGiant 		   | p2_racktom
+69    | 0%    | drumLarge 		   | p1_snare
+70    | 0%    | drumMedium 		   | p2_floor_tom_2
+71    | 0%    | drumSmall 		   | p2_kick
+72    | 0%    | cymbal 			   | p1_open_hat
+73    | 0%    | bongoBig 		   | bongolowest
+74    | 0%    | bongoSmall 		   | bongohigh
+75    | 0%    | squeak_squeeze 		   | squeak_squeeze
+76    | 0%    | squeak_release             | squeak_release
