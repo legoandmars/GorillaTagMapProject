@@ -1,0 +1,299 @@
+Name of this mat is: default
+ index for this material: 0
+ slipperiness for this material: 0
+ 
+Name of this mat is: rockwall2
+ index for this material: 1
+ slipperiness for this material: 0.55
+ 
+Name of this mat is: canyon5
+ index for this material: 2
+ slipperiness for this material: 0.55
+ 
+Name of this mat is: pillowwhite
+ index for this material: 3
+ slipperiness for this material: 0
+ 
+Name of this mat is: pillowblue
+ index for this material: 4
+ slipperiness for this material: 0
+ 
+Name of this mat is: pillowyellow
+ index for this material: 5
+ slipperiness for this material: 0
+ 
+Name of this mat is: pillowpink
+ index for this material: 6
+ slipperiness for this material: 0
+ 
+Name of this mat is: pitground
+ index for this material: 7
+ slipperiness for this material: 0
+ 
+Name of this mat is: bark
+ index for this material: 8
+ slipperiness for this material: 0
+ 
+Name of this mat is: loglowres
+ index for this material: 9
+ slipperiness for this material: 0
+ 
+Name of this mat is: table
+ index for this material: 10
+ slipperiness for this material: 0
+ 
+Name of this mat is: darkbrownpanel
+ index for this material: 11
+ slipperiness for this material: 0
+ 
+Name of this mat is: logsupport
+ index for this material: 12
+ slipperiness for this material: 0
+ 
+Name of this mat is: woodensupport
+ index for this material: 13
+ slipperiness for this material: 0
+ 
+Name of this mat is: minewall
+ index for this material: 14
+ slipperiness for this material: 0
+ 
+Name of this mat is: picnictable
+ index for this material: 15
+ slipperiness for this material: 0
+ 
+Name of this mat is: crate
+ index for this material: 16
+ slipperiness for this material: 0
+ 
+Name of this mat is: carttexture
+ index for this material: 17
+ slipperiness for this material: 0
+ 
+Name of this mat is: metalbare
+ index for this material: 18
+ slipperiness for this material: 0
+ 
+Name of this mat is: metalpattern
+ index for this material: 19
+ slipperiness for this material: 0
+ 
+Name of this mat is: crystallrpink
+ index for this material: 20
+ slipperiness for this material: 0
+ 
+Name of this mat is: crystallrpurple
+ index for this material: 21
+ slipperiness for this material: 0
+ 
+Name of this mat is: crystallrteal
+ index for this material: 22
+ slipperiness for this material: 0
+ 
+Name of this mat is: crystallryellow
+ index for this material: 23
+ slipperiness for this material: 0
+ 
+Name of this mat is: bronze
+ index for this material: 24
+ slipperiness for this material: 0
+ 
+Name of this mat is: redpanel
+ index for this material: 25
+ slipperiness for this material: 0
+ 
+Name of this mat is: rusty
+ index for this material: 26
+ slipperiness for this material: 0
+ 
+Name of this mat is: cactus
+ index for this material: 27
+ slipperiness for this material: 0
+ 
+Name of this mat is: Light
+ index for this material: 28
+ slipperiness for this material: 0
+ 
+Name of this mat is: window
+ index for this material: 29
+ slipperiness for this material: 0
+ 
+Name of this mat is: MirrorCenter
+ index for this material: 30
+ slipperiness for this material: 0
+ 
+Name of this mat is: pitgroundfall
+ index for this material: 31
+ slipperiness for this material: 0
+ 
+Name of this mat is: pitgroundwinter
+ index for this material: 32
+ slipperiness for this material: 0
+ 
+Name of this mat is: holidaywhite
+ index for this material: 33
+ slipperiness for this material: 0
+ 
+Name of this mat is: holidaywhiteoff
+ index for this material: 34
+ slipperiness for this material: 0
+ 
+Name of this mat is: holidayred
+ index for this material: 35
+ slipperiness for this material: 0
+ 
+Name of this mat is: holidaygreen
+ index for this material: 36
+ slipperiness for this material: 0
+ 
+Name of this mat is: holidayyellow
+ index for this material: 37
+ slipperiness for this material: 0
+ 
+Name of this mat is: holidayblue
+ index for this material: 38
+ slipperiness for this material: 0
+ 
+Name of this mat is: christmastree
+ index for this material: 39
+ slipperiness for this material: 0
+ 
+Name of this mat is: first2down
+ index for this material: 40
+ slipperiness for this material: 0
+ 
+Name of this mat is: second2down
+ index for this material: 41
+ slipperiness for this material: 0
+ 
+Name of this mat is: third2down
+ index for this material: 42
+ slipperiness for this material: 0
+ 
+Name of this mat is: fifth2down
+ index for this material: 43
+ slipperiness for this material: 0
+ 
+Name of this mat is: sixth2down
+ index for this material: 44
+ slipperiness for this material: 0
+ 
+Name of this mat is: first1down
+ index for this material: 45
+ slipperiness for this material: 0
+ 
+Name of this mat is: second1down
+ index for this material: 46
+ slipperiness for this material: 0
+ 
+Name of this mat is: third1down
+ index for this material: 47
+ slipperiness for this material: 0
+ 
+Name of this mat is: fifth1down
+ index for this material: 48
+ slipperiness for this material: 0
+ 
+Name of this mat is: sixth1down
+ index for this material: 49
+ slipperiness for this material: 0
+ 
+Name of this mat is: first
+ index for this material: 50
+ slipperiness for this material: 0
+ 
+Name of this mat is: second
+ index for this material: 51
+ slipperiness for this material: 0
+ 
+Name of this mat is: third
+ index for this material: 52
+ slipperiness for this material: 0
+ 
+Name of this mat is: fifth
+ index for this material: 53
+ slipperiness for this material: 0
+ 
+Name of this mat is: sixth
+ index for this material: 54
+ slipperiness for this material: 0
+ 
+Name of this mat is: shinyhatlas2
+ index for this material: 55
+ slipperiness for this material: 0
+ 
+Name of this mat is: whee
+ index for this material: 56
+ slipperiness for this material: 0.95
+ 
+Name of this mat is: bronzeslide
+ index for this material: 57
+ slipperiness for this material: 0.985
+ 
+Name of this mat is: metalslide
+ index for this material: 58
+ slipperiness for this material: 0.75
+ 
+Name of this mat is: iceground
+ index for this material: 59
+ slipperiness for this material: 0.995
+ 
+Name of this mat is: purpleplasticinside
+ index for this material: 60
+ slipperiness for this material: 0.995
+ 
+Name of this mat is: mountainice
+ index for this material: 61
+ slipperiness for this material: 0.995
+ 
+Name of this mat is: cosmeticsroomatlasslippery
+ index for this material: 62
+ slipperiness for this material: 0.995
+ 
+Name of this mat is: rockwall3
+ index for this material: 63
+ slipperiness for this material: 0.995
+ 
+Name of this mat is: umbrellaopen
+ index for this material: 64
+ slipperiness for this material: 0.995
+ 
+Name of this mat is: umbrellaclose
+ index for this material: 65
+ slipperiness for this material: 0
+ 
+Name of this mat is: keyboardkey
+ index for this material: 66
+ slipperiness for this material: 0
+ 
+Name of this mat is: buttonpress
+ index for this material: 67
+ slipperiness for this material: 0
+ 
+Name of this mat is: drumGiant
+ index for this material: 68
+ slipperiness for this material: 0
+ 
+Name of this mat is: drumLarge
+ index for this material: 69
+ slipperiness for this material: 0
+ 
+Name of this mat is: drumMedium
+ index for this material: 70
+ slipperiness for this material: 0
+ 
+Name of this mat is: drumSmall
+ index for this material: 71
+ slipperiness for this material: 0
+ 
+Name of this mat is: cymbal
+ index for this material: 72
+ slipperiness for this material: 0
+ 
+Name of this mat is: bongoBig
+ index for this material: 73
+ slipperiness for this material: 0
+ 
+Name of this mat is: bongoSmall
+ index for this material: 74
+ slipperiness for this material: 0
